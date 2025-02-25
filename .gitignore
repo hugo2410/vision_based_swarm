@@ -1,0 +1,9 @@
+# VSCode settings
+.vscode
+
+# Distribution / packaging
+.Python
+env/
+build/
+dist/
+*.log
