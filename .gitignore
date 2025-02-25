@@ -7,3 +7,8 @@ env/
 build/
 dist/
 *.log
+
+# Ignore generated Doxygen documentation
+docs/html/
+docs/latex/
+docs/*.pdf

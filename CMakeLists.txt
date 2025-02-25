@@ -5,7 +5,7 @@ project(vision_based_swarm)
 set(CMAKE_CXX_STANDARD 17)
 
 # Add subdirectories.
-add_subdirectory(src/simulation)
+add_subdirectory(src/Simulation)
 
 # Add executable target for the main application.
 add_executable(main src/main.cpp)

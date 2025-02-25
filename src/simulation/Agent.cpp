@@ -3,7 +3,7 @@
 // created by hugo on 2/25/25.
 //
 
-#include "simulation/agent.h"
+#include "Agent.h"
 
 #include <utility>
 #include <vector>
@@ -17,11 +17,7 @@ void Agent::setPosition(const std::pair<double, double>& pos) {
 
 std::pair<double, double> Agent::getPosition() const { return position; }
 
-void Agent::updateState(const std::vector<int>& fov, double timeStep) {
-  // Compute new acceleration based on FOV and other rules.
-  // For now, set a placeholder acceleration.
-  acceleration = {0.1 * fov.size(), -0.1 * fov.size()};
-
+void Agent::updateState(const std::vector<int>& acceleration, double timeStep) {
   // Update velocity and position.
   velocity.first += acceleration.first * timeStep;
   velocity.second += acceleration.second * timeStep;

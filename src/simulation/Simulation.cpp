@@ -3,19 +3,17 @@
 // created by hugo on 2/25/25.
 //
 
-#include "simulation/simulation.h"
+#include "simulation/Simulation.h"
 
 #include <vector>
 
-Simulation::Simulation(int numAgents, double timeStep)
-    : timeStep(timeStep), fovCalculator() {
+Simulation::Simulation(int numAgents, double timeStep) : timeStep(timeStep) {
   agents.resize(numAgents);
 }
 
 void Simulation::update() {
   for (auto& agent : agents) {
-    auto fov = fovCalculator.computeFOV(agents, agent);
-    agent.updateState(fov, timeStep);
+    agent.updateState(timeStep);
   }
 }
 
