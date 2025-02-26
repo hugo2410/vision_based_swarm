@@ -1,0 +1,47 @@
+name: Build and Run
+
+on:
+  pull_request:
+
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+          # Add any other dependencies your project needs here
+          # For example: sudo apt-get install -y libboost-all-dev
+
+      - name: Create build directory
+        run: mkdir -p build
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}/build
+        run: cmake ..
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . --config Release
+
+      - name: Run executable
+        working-directory: ${{github.workspace}}/build
+        # This step will only run if the build succeeds (GitHub Actions handles this automatically)
+        run: |
+          # Execute the main binary - adjust the path to match your project's output
+          if [ -f "./vision_based_swarm" ]; then
+            ./vision_based_swarm
+          elif [ -f "./src/vision_based_swarm" ]; then
+            ./src/vision_based_swarm
+          else
+            echo "Executable not found. Listing build directory contents:"
+            find . -type f -executable -print
+            exit 1
+          fi
