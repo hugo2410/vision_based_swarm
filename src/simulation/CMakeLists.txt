@@ -21,3 +21,5 @@ target_include_directories(simulation PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}  # Current directory
         ${CMAKE_CURRENT_SOURCE_DIR}/..  # Parent directory (src)
 )
+# Add this to your CMakeLists.txt file
+add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}")

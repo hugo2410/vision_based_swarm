@@ -47,14 +47,15 @@ void Plotter::plotTrajectories(const std::string& filename) {
   dataFile << "]\n";
   dataFile.close();
 
-  // Execute the Python script
+  // Execute the Python script with the correct path
   std::stringstream cmd;
-  cmd << "python plot_trajectories.py"
+  cmd << "python3 " << SOURCE_DIR << "/src/simulation/plot_trajectories.py"
       << " --data_file=" << dataFilename << " --output=" << filename
       << " --world_size_x=" << params.worldSizeX
       << " --world_size_y=" << params.worldSizeY;
 
   std::cout << "Generating trajectory plot..." << std::endl;
+  std::cout << "Executing: " << cmd.str() << std::endl;  // Debug output
   std::system(cmd.str().c_str());
   std::cout << "Plot saved to " << filename << std::endl;
 }
@@ -90,14 +91,15 @@ void Plotter::createVideo(const std::string& filename, int fps) {
   dataFile << "]\n";
   dataFile.close();
 
-  // Execute the Python script
+  // Execute the Python script with the correct path
   std::stringstream cmd;
-  cmd << "python create_video.py"
+  cmd << "python3 " << SOURCE_DIR << "/src/simulation/create_video.py"
       << " --data_file=" << dataFilename << " --output=" << filename
       << " --world_size_x=" << params.worldSizeX
       << " --world_size_y=" << params.worldSizeY << " --fps=" << fps;
 
   std::cout << "Generating simulation video..." << std::endl;
+  std::cout << "Executing: " << cmd.str() << std::endl;  // Debug output
   std::system(cmd.str().c_str());
   std::cout << "Video saved to " << filename << std::endl;
 }
