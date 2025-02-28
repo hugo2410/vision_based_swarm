@@ -15,6 +15,19 @@ repos:
         args: ["--extensions=cpp,h,cc,hpp"]
         files: "\\.(cpp|hpp|cc|h)$"
 
+  # Cppcheck for static code analysis
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: cppcheck
+        args: [
+          "--enable=all",
+          "--suppress=missingIncludeSystem",
+          "--inline-suppr",
+          "--error-exitcode=1"
+        ]
+        files: "\\.(cpp|hpp|cc|h)$"
+
   # Generic hooks for trailing whitespaces and other basic checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
