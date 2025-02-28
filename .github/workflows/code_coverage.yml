@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-test-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for proper comparison
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential libgtest-dev lcov gcovr bc
+
+      - name: Configure CMake with coverage
+        run: cmake -B build -DCODE_COVERAGE=ON
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Run tests
+        working-directory: build
+        run: ctest --verbose
+
+      - name: Generate coverage report
+        run: |
+          lcov --directory . --capture --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' '*/tests/*' '*/build/*' --output-file coverage.info
+          lcov --list coverage.info
+
+      - name: Generate coverage comment
+        if: github.event_name == 'pull_request'
+        run: |
+          # Extract the coverage percentage
+          COVERAGE=$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1)
+          
+          # Try to get previous coverage from main branch
+          git checkout ${{ github.base_ref }} 2>/dev/null || true
+          if [ -f ".previous_coverage" ]; then
+            PREVIOUS_COVERAGE=$(cat .previous_coverage)
+          else
+            PREVIOUS_COVERAGE=$COVERAGE
+          fi
+          git checkout ${{ github.head_ref }} 2>/dev/null || true
+          
+          # Calculate the difference
+          DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc)
+          
+          # Determine if coverage increased or decreased
+          if (( $(echo "$DIFF > 0" | bc -l) )); then
+            CHANGE="increased by $DIFF%"
+            EMOJI="🎉"
+          elif (( $(echo "$DIFF < 0" | bc -l) )); then
+            CHANGE="decreased by $(echo "$DIFF * -1" | bc)%"
+            EMOJI="🔻"
+          else
+            CHANGE="unchanged"
+            EMOJI="🔄"
+          fi
+          
+          # Create markdown for the comment
+          cat > coverage-comment.md << EOF
+          ## Code Coverage Report ${EMOJI}
+          
+          Current coverage: **${COVERAGE}%**
+          Previous coverage: **${PREVIOUS_COVERAGE}%**
+          Coverage has ${CHANGE}
+          
+          <details>
+          <summary>Click to see detailed coverage report</summary>
+          
+          \`\`\`
+          $(lcov --list coverage.info)
+          \`\`\`
+          
+          </details>
+          EOF
+          
+          # Store the current coverage for future comparison
+          echo "$COVERAGE" > .previous_coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.info
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Generate HTML coverage report
+        run: genhtml coverage.info --output-directory coverage_report
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage_report/
+
+      - name: Comment PR with coverage info
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          recreate: true
+          path: coverage-comment.md

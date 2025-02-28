@@ -12,8 +12,39 @@ else()
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# Add src directory
+# Define source directory for scripts
+add_definitions(-DSOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+
+# Enable testing
+enable_testing()
+
+# Add code coverage option
+option(CODE_COVERAGE "Enable coverage reporting" OFF)
+if(CODE_COVERAGE AND NOT MSVC)
+    # Add required flags for coverage (gcc/clang only)
+    add_compile_options(-O0 -g --coverage)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
+        add_link_options(--coverage)
+    else()
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} --coverage")
+    endif()
+endif()
+
+# Create the main library target (excluding main.cpp)
+file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
+list(FILTER PROJECT_SOURCES EXCLUDE REGEX ".*main\\.cpp$")
+add_library(${PROJECT_NAME}_lib ${PROJECT_SOURCES}
+        tests/Simulation_test.cpp)
+target_include_directories(${PROJECT_NAME}_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Add src directory (for the executable)
 add_subdirectory(src)
+
+# Add tests directory if it exists
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+    add_subdirectory(tests)
+endif()
 
 # Add option for building documentation
 option(BUILD_DOCUMENTATION "Build Doxygen documentation" OFF)
