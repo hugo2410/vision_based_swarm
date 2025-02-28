@@ -40,7 +40,7 @@ jobs:
         run: |
           # Extract the coverage percentage
           COVERAGE=$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1)
-          
+
           # Try to get previous coverage from main branch
           git checkout ${{ github.base_ref }} 2>/dev/null || true
           if [ -f ".previous_coverage" ]; then
@@ -49,10 +49,10 @@ jobs:
             PREVIOUS_COVERAGE=$COVERAGE
           fi
           git checkout ${{ github.head_ref }} 2>/dev/null || true
-          
+
           # Calculate the difference
           DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc)
-          
+
           # Determine if coverage increased or decreased
           if (( $(echo "$DIFF > 0" | bc -l) )); then
             CHANGE="increased by $DIFF%"
@@ -64,25 +64,25 @@ jobs:
             CHANGE="unchanged"
             EMOJI="🔄"
           fi
-          
+
           # Create markdown for the comment
           cat > coverage-comment.md << EOF
           ## Code Coverage Report ${EMOJI}
-          
+
           Current coverage: **${COVERAGE}%**
           Previous coverage: **${PREVIOUS_COVERAGE}%**
           Coverage has ${CHANGE}
-          
+
           <details>
           <summary>Click to see detailed coverage report</summary>
-          
+
           \`\`\`
           $(lcov --list coverage.info)
           \`\`\`
-          
+
           </details>
           EOF
-          
+
           # Store the current coverage for future comparison
           echo "$COVERAGE" > .previous_coverage
 

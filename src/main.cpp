@@ -38,10 +38,10 @@ std::vector<std::pair<double, double>> generateAccelerations(
 
   // Define waypoints (x, y coordinates)
   static const std::vector<std::pair<double, double>> waypoints = {
-    {20.0, 20.0},  // Bottom left
-    {80.0, 20.0},  // Bottom right
-    {80.0, 80.0},  // Top right
-    {20.0, 80.0}   // Top left
+      {20.0, 20.0},  // Bottom left
+      {80.0, 20.0},  // Bottom right
+      {80.0, 80.0},  // Top right
+      {20.0, 80.0}   // Top left
   };
 
   // Keep track of current waypoint index for each agent
@@ -53,10 +53,10 @@ std::vector<std::pair<double, double>> generateAccelerations(
   }
 
   // Parameters for the controller
-  double arrivalDistance = 2.0;     // How close is "arrived" at waypoint
-  double maxSpeed = 10.0;           // Maximum desired speed
-  double timeStep = 0.01;           // Should match your simulation timestep
-  double maxAccel = 10.0;           // Maximum acceleration magnitude
+  double arrivalDistance = 2.0;  // How close is "arrived" at waypoint
+  double maxSpeed = 10.0;        // Maximum desired speed
+  double timeStep = 0.01;        // Should match your simulation timestep
+  double maxAccel = 10.0;        // Maximum acceleration magnitude
 
   for (size_t i = 0; i < agents.size(); i++) {
     const auto& agent = agents[i];
@@ -119,7 +119,6 @@ std::vector<std::pair<double, double>> generateAccelerations(
 
   return accelerations;
 }
-
 
 int main() {
   // Create simulation parameters with defaults
