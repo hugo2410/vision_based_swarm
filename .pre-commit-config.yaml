@@ -15,17 +15,13 @@ repos:
         args: ["--extensions=cpp,h,cc,hpp"]
         files: "\\.(cpp|hpp|cc|h)$"
 
-  # Local cppcheck hook (only on staged files)
-  - repo: local
+  # Cppcheck from pocc's pre-commit hooks
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
     hooks:
       - id: cppcheck
-        name: cppcheck
-        entry: cppcheck
-        args: ["--enable=warning", "--suppress=missingInclude", "--std=c++17"]
-        language: system
-        types: [c++]
+        args: ["--enable=warning", "--suppress=missingInclude", "--language=c++", "--std=c++17"]
         files: "\\.(cpp|hpp|cc|h)$"
-        # This ensures it only runs on staged files
         stages: [pre-commit]
 
   # Generic hooks for trailing whitespaces and other basic checks
