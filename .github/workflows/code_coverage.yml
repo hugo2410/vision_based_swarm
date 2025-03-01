@@ -1,4 +1,4 @@
-name: CI
+name: Code coverage
 
 on:
   push:
@@ -31,7 +31,8 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          lcov --directory . --capture --output-file coverage.info
+          # Use --ignore-errors flags to prevent mismatch errors
+          lcov --directory . --capture --output-file coverage.info --ignore-errors mismatch,gcov
           lcov --remove coverage.info '/usr/*' '*/tests/*' '*/build/*' --output-file coverage.info
           lcov --list coverage.info
 
@@ -41,24 +42,48 @@ jobs:
           # Extract the coverage percentage
           COVERAGE=$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1)
 
+          # Make sure COVERAGE is not empty
+          if [ -z "$COVERAGE" ]; then
+            echo "Failed to extract coverage percentage"
+            COVERAGE="0.0"
+          fi
+
           # Try to get previous coverage from main branch
-          git checkout ${{ github.base_ref }} 2>/dev/null || true
+          git fetch origin ${{ github.base_ref }} 2>/dev/null || true
+          git checkout FETCH_HEAD 2>/dev/null || true
           if [ -f ".previous_coverage" ]; then
             PREVIOUS_COVERAGE=$(cat .previous_coverage)
           else
-            PREVIOUS_COVERAGE=$COVERAGE
+            # If no previous coverage file exists, try to generate one
+            if [ -d "src" ]; then  # Only if source exists in base branch
+              lcov --directory . --capture --output-file prev_coverage.info --ignore-errors mismatch,gcov 2>/dev/null || true
+              lcov --remove prev_coverage.info '/usr/*' '*/tests/*' '*/build/*' --output-file prev_coverage.info 2>/dev/null || true
+              PREVIOUS_COVERAGE=$(lcov --list prev_coverage.info 2>/dev/null | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1 || echo "0.0")
+            else
+              PREVIOUS_COVERAGE="0.0"
+            fi
           fi
-          git checkout ${{ github.head_ref }} 2>/dev/null || true
 
-          # Calculate the difference
-          DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc)
+          # Return to PR branch
+          git checkout ${{ github.sha }} 2>/dev/null || true
+
+          # Ensure PREVIOUS_COVERAGE is not empty
+          if [ -z "$PREVIOUS_COVERAGE" ]; then
+            PREVIOUS_COVERAGE="0.0"
+          fi
+
+          # Calculate the difference (with error handling)
+          DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc 2>/dev/null || echo "0")
+
+          # Format DIFF to 2 decimal places
+          DIFF=$(printf "%.2f" $DIFF)
 
           # Determine if coverage increased or decreased
           if (( $(echo "$DIFF > 0" | bc -l) )); then
-            CHANGE="increased by $DIFF%"
+            CHANGE="increased by ${DIFF}%"
             EMOJI="🎉"
           elif (( $(echo "$DIFF < 0" | bc -l) )); then
-            CHANGE="decreased by $(echo "$DIFF * -1" | bc)%"
+            CHANGE="decreased by $(echo "${DIFF#-}")%"  # Remove minus sign
             EMOJI="🔻"
           else
             CHANGE="unchanged"
