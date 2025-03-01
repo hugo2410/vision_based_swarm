@@ -17,8 +17,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake
-          # Add any other dependencies your project needs here
-          # For example: sudo apt-get install -y libboost-all-dev
+          # Install Google Test
+          sudo apt-get install -y libgtest-dev
+          # Build and install GTest from source (necessary on some Ubuntu versions)
+          cd /usr/src/gtest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp lib/libgtest*.a /usr/lib/
+          cd -
+
 
       - name: Create build directory
         run: mkdir -p build
