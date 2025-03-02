@@ -38,89 +38,56 @@ jobs:
       - name: Generate coverage comment
         if: github.event_name == 'pull_request'
         run: |
-          # Save the full coverage report to a file for inspection
-          lcov --list coverage.info > lcov_output.txt
+          # Extract the coverage percentage
+          COVERAGE=$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1)
 
-          # Print the coverage output for debugging
-          echo "Raw lcov output:"
-          cat lcov_output.txt
-
-          # Extract the coverage percentage using grep and sed
-          COVERAGE=$(grep "Total:" lcov_output.txt | sed -E 's/.*Total:[ \t]*([0-9.]+)%.*/\1/')
-
-          # Make sure COVERAGE is not empty and is a valid number
-          if [ -z "$COVERAGE" ] || ! [[ "$COVERAGE" =~ ^[0-9.]+$ ]]; then
-            echo "Failed to extract valid coverage percentage, got: '$COVERAGE'"
-            # Try alternative extraction using awk
-            COVERAGE=$(grep "Total:" lcov_output.txt | awk '{for(i=1;i<=NF;i++) if($i ~ /[0-9.]+%/) {sub(/%/,"",$i); print $i; exit}}')
-
-            if [ -z "$COVERAGE" ] || ! [[ "$COVERAGE" =~ ^[0-9.]+$ ]]; then
-              echo "Secondary extraction also failed, defaulting to 0.0"
-              COVERAGE="0.0"
-            fi
+          # Make sure COVERAGE is not empty
+          if [ -z "$COVERAGE" ]; then
+            echo "Failed to extract coverage percentage"
+            COVERAGE="0.0"
           fi
-
-          echo "Current coverage is: $COVERAGE%"
 
           # Try to get previous coverage from main branch
           git fetch origin ${{ github.base_ref }} 2>/dev/null || true
           git checkout FETCH_HEAD 2>/dev/null || true
-
-          PREVIOUS_COVERAGE="0.0"
           if [ -f ".previous_coverage" ]; then
             PREVIOUS_COVERAGE=$(cat .previous_coverage)
-            # Validate the previous coverage value
-            if ! [[ "$PREVIOUS_COVERAGE" =~ ^[0-9.]+$ ]]; then
-              echo "Invalid previous coverage value: $PREVIOUS_COVERAGE, defaulting to 0.0"
-              PREVIOUS_COVERAGE="0.0"
-            fi
           else
-            echo "No previous coverage file found, generating from base branch"
             # If no previous coverage file exists, try to generate one
             if [ -d "src" ]; then  # Only if source exists in base branch
-              lcov --directory . --capture --output-file prev_coverage.info --ignore-errors mismatch,gcov,unused 2>/dev/null || true
-              lcov --remove prev_coverage.info '/usr/*' '*/tests/*' --output-file prev_coverage.info --ignore-errors unused 2>/dev/null || true
-              lcov --list prev_coverage.info > prev_lcov_output.txt 2>/dev/null || true
-
-              echo "Previous branch lcov output:"
-              cat prev_lcov_output.txt 2>/dev/null || echo "No output generated"
-
-              PREVIOUS_COVERAGE=$(grep "Total:" prev_lcov_output.txt 2>/dev/null | sed -E 's/.*Total:[ \t]*([0-9.]+)%.*/\1/' || echo "0.0")
-
-              if ! [[ "$PREVIOUS_COVERAGE" =~ ^[0-9.]+$ ]]; then
-                echo "Invalid previous coverage value from generation: $PREVIOUS_COVERAGE, defaulting to 0.0"
-                PREVIOUS_COVERAGE="0.0"
-              fi
+              lcov --directory . --capture --output-file prev_coverage.info --ignore-errors mismatch,gcov 2>/dev/null || true
+              lcov --remove prev_coverage.info '/usr/*' '*/tests/*' '*/build/*' --output-file prev_coverage.info 2>/dev/null || true
+              PREVIOUS_COVERAGE=$(lcov --list prev_coverage.info 2>/dev/null | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1 || echo "0.0")
             else
-              echo "No src directory in base branch"
+              PREVIOUS_COVERAGE="0.0"
             fi
           fi
-
-          echo "Previous coverage is: $PREVIOUS_COVERAGE%"
 
           # Return to PR branch
           git checkout ${{ github.sha }} 2>/dev/null || true
 
-          # Calculate the difference with validation
+          # Ensure PREVIOUS_COVERAGE is not empty
+          if [ -z "$PREVIOUS_COVERAGE" ]; then
+            PREVIOUS_COVERAGE="0.0"
+          fi
+
+          # Calculate the difference (with error handling)
           DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc 2>/dev/null || echo "0")
-          # Format DIFF to 1 decimal place
-          DIFF=$(printf "%.1f" $DIFF 2>/dev/null || echo "0.0")
-          echo "Coverage difference is: $DIFF%"
+
+          # Format DIFF to 2 decimal places
+          DIFF=$(printf "%.2f" $DIFF)
 
           # Determine if coverage increased or decreased
-          if (( $(echo "$DIFF > 0" | bc -l 2>/dev/null || echo "0") )); then
+          if (( $(echo "$DIFF > 0" | bc -l) )); then
             CHANGE="increased by ${DIFF}%"
             EMOJI="🎉"
-          elif (( $(echo "$DIFF < 0" | bc -l 2>/dev/null || echo "0") )); then
+          elif (( $(echo "$DIFF < 0" | bc -l) )); then
             CHANGE="decreased by $(echo "${DIFF#-}")%"  # Remove minus sign
             EMOJI="🔻"
           else
             CHANGE="unchanged"
             EMOJI="🔄"
           fi
-
-          # Get detailed coverage report
-          DETAILED_REPORT=$(lcov --list coverage.info)
 
           # Create markdown for the comment
           cat > coverage-comment.md << EOF
@@ -134,7 +101,7 @@ jobs:
           <summary>Click to see detailed coverage report</summary>
 
           \`\`\`
-          $DETAILED_REPORT
+          $(lcov --list coverage.info)
           \`\`\`
 
           </details>
