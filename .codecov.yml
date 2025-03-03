@@ -1,0 +1,19 @@
+coverage:
+  precision: 2
+  round: down
+  range: "0...100"
+  status:
+    project:
+      default:
+        target: 80%    # target coverage percentage
+        threshold: 1%  # allow coverage to drop by 1% and still succeed
+    patch:
+      default:
+        target: 80%
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: no
+  require_head: yes

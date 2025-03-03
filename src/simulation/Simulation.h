@@ -4,9 +4,11 @@
 #ifndef SRC_SIMULATION_SIMULATION_H_
 #define SRC_SIMULATION_SIMULATION_H_
 
+#include <random>
 #include <vector>
 
 #include "simulation/Agent.h"
+#include "simulation/SimulationParams.h"
 
 /**
  * @class Simulation
@@ -19,51 +21,74 @@
 class Simulation {
  public:
   /**
-   * @brief Constructs a Simulation object.
-   *
-   * Initializes the simulation with a specified number of agents and a time
-   * step.
-   *
-   * @param numAgents The number of agents in the simulation.
-   * @param timeStep The time step for updating the simulation (in seconds).
+   * @brief Constructor
+   * @param params Configuration parameters for the simulation
    */
-  Simulation(int numAgents, double timeStep);
+  explicit Simulation(const SimulationParams& params);
 
   /**
-   * @brief Updates the state of all agents in the simulation.
-   *
-   * This method updates each agent's position, velocity, and acceleration
-   * based on their interactions and the simulation rules.
+   * @brief Initialize all agents with starting positions and velocities
+   */
+  void initialize();
+
+  /**
+   * @brief Update all agents for a single time step using current accelerations
    */
   void update();
 
   /**
-   * @brief Sets the positions of all agents in the simulation.
-   *
-   * @param positions A vector of pairs representing the (x, y) coordinates
-   *                  for each agent.
+   * @brief Set custom accelerations for agents from external source
+   * @param accelerations Vector of acceleration pairs for each agent
    */
-  void setAgentPositions(
-      const std::vector<std::pair<double, double>>& positions);
+  void setAgentAccelerations(
+      const std::vector<std::pair<double, double>>& accelerations);
 
   /**
-   * @brief Retrieves the accelerations of all agents in the simulation.
-   *
-   * @return A vector of pairs representing the (x, y) components of
-   * acceleration for each agent.
+   * @brief Get a reference to all agents
+   * @return Reference to the vector of agents
    */
-  std::vector<std::pair<double, double>> getAgentAccelerations() const;
+  std::vector<Agent>& getAgents();
+
+  /**
+   * @brief Get the trajectory history for all agents
+   * @return Const reference to the trajectory data
+   */
+  const std::vector<std::vector<std::pair<double, double>>>& getTrajectories()
+      const;
+
+  /**
+   * @brief Get the current simulation time
+   * @return The current time in simulation units
+   */
+  double getCurrentTime() const;
+
+  /**
+   * @brief Record current agent positions in trajectory history
+   */
+  void recordTrajectories();
 
  private:
   /**
-   * @brief A vector containing all agents in the simulation.
+   * @brief Initialize agents in a grid pattern
    */
-  std::vector<Agent> agents;
+  void initializeGrid();
 
   /**
-   * @brief The time step used for updating the simulation (in seconds).
+   * @brief Initialize agents with random positions
    */
-  double timeStep;
+  void initializeRandom();
+
+  SimulationParams params;    ///< Configuration parameters
+  std::vector<Agent> agents;  ///< Collection of all agents
+  std::mt19937 rng;           ///< Random number generator
+  double currentTime;         ///< Current simulation time
+
+  /**
+   * @brief Stores agent trajectories over time for plotting
+   *
+   * Format: trajectories[agent_idx][time_step] = (x,y)
+   */
+  std::vector<std::vector<std::pair<double, double>>> trajectories;
 };
 
 #endif  // SRC_SIMULATION_SIMULATION_H_

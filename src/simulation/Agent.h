@@ -32,6 +32,20 @@ class Agent {
   void setPosition(const std::pair<double, double>& position);
 
   /**
+   * @brief Sets the velocity of the agent.
+   *
+   * @param vel A pair representing the (x, y) velocity of the agent.
+   */
+  void setVelocity(const std::pair<double, double>& vel);
+
+  /**
+   * @brief Sets the acceleration of the agent.
+   *
+   * @param acc A pair representing the (x, y) acceleration of the agent.
+   */
+  void setAcceleration(const std::pair<double, double>& acc);
+
+  /**
    * @brief Gets the current position of the agent.
    *
    * @return A pair representing the (x, y) coordinates of the agent.
@@ -44,11 +58,9 @@ class Agent {
    * This method updates the agent's velocity and position using its current
    * acceleration and a given time step.
    *
-   * @param acceleration A vector of integers representing acceleration values
-   *                     (e.g., visual field effects or external forces).
    * @param time_step The time step used for updating the state (in seconds).
    */
-  void updateState(const std::vector<int>& acceleration, double time_step);
+  void updateState(double time_step);
 
   /**
    * @brief Gets the current acceleration of the agent.
@@ -57,6 +69,14 @@ class Agent {
    * acceleration.
    */
   std::pair<double, double> getAcceleration() const;
+
+  /**
+   * @brief Gets the current velocity of the agent.
+   *
+   * @return A pair representing the (x, y) components of the agent's
+   * velocity.
+   */
+  std::pair<double, double> getVelocity() const;
 
  private:
   /**

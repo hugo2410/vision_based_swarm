@@ -1,10 +1,25 @@
-# Create a library target for the simulation module.
-add_library(simulation
+# Define the source files for the simulation library
+set(SIMULATION_SOURCES
+        Agent.cpp
         Simulation.cpp
-        Agent.cpp)
+        Plotter.cpp
+)
 
-# Include directories for headers.
-target_include_directories(simulation PUBLIC ../../include)
+# Define the header files
+set(SIMULATION_HEADERS
+        Agent.h
+        Simulation.h
+        SimulationParams.h
+        Plotter.h
+)
 
-# Link any required libraries (e.g., math libraries).
-target_link_libraries(simulation PRIVATE m)
+# Create a library for simulation components
+add_library(simulation STATIC ${SIMULATION_SOURCES} ${SIMULATION_HEADERS})
+
+# Specify include directories for the library
+target_include_directories(simulation PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}  # Current directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/..  # Parent directory (src)
+)
+# Add this to your CMakeLists.txt file
+add_definitions(-DSOURCE_DIR="${CMAKE_SOURCE_DIR}")
