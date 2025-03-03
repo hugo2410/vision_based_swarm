@@ -39,7 +39,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           # Extract the coverage percentage
-          COVERAGE=$(lcov --list coverage.info | grep 'Total:' | awk '{print $2}' | sed 's/%//g')
+          COVERAGE=$(lcov --list coverage.info | grep 'Total:' | awk '{print $1}' | sed 's/%//g')
 
           # Make sure COVERAGE is not empty
           if [ -z "$COVERAGE" ]; then
