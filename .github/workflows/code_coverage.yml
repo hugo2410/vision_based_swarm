@@ -38,12 +38,11 @@ jobs:
       - name: Generate line coverage comment
         if: github.event_name == 'pull_request'
         run: |
-          # Extract line coverage (first percentage)
-          LINE_COVERAGE=$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | sed -n '1p' | cut -d'%' -f1)
-          # Get previous line coverage or default to 0.0
-          PREVIOUS_LINE_COVERAGE=$(cat .previous_line_coverage 2>/dev/null || echo "0.0")
-          DIFF_LINE=$(echo "$LINE_COVERAGE - $PREVIOUS_LINE_COVERAGE" | bc 2>/dev/null || echo "0")
-          DIFF_LINE=$(printf "%.2f" $DIFF_LINE)
+          LINE_COVERAGE="$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | sed -n '1p' | cut -d'%' -f1)"
+          PREVIOUS_LINE_COVERAGE="$(cat .previous_line_coverage 2>/dev/null || echo "0.0")"
+          DIFF_LINE="$(echo "$LINE_COVERAGE - $PREVIOUS_LINE_COVERAGE" | bc 2>/dev/null || echo "0")"
+          DIFF_LINE="$(printf "%.2f" "$DIFF_LINE")"
+
           if (( $(echo "$DIFF_LINE > 0" | bc -l) )); then
             CHANGE_LINE="increased by ${DIFF_LINE}%"
             EMOJI_LINE="🎉"
@@ -54,87 +53,90 @@ jobs:
             CHANGE_LINE="unchanged"
             EMOJI_LINE="🔄"
           fi
+
           cat > coverage-line-comment.md << EOF
-## Line Coverage Report ${EMOJI_LINE}
+          ## Line Coverage Report ${EMOJI_LINE}
 
-Current line coverage: **${LINE_COVERAGE}%**
-Previous line coverage: **${PREVIOUS_LINE_COVERAGE}%**
-  Coverage has ${CHANGE_LINE}
+          Current line coverage: **${LINE_COVERAGE}%**
+          Previous line coverage: **${PREVIOUS_LINE_COVERAGE}%**
+          Coverage has ${CHANGE_LINE}
 
-  <details>
-  <summary>Click to see detailed coverage report</summary>
+          <details>
+          <summary>Click to see detailed coverage report</summary>
 
-  \`\`\`
-  $(lcov --list coverage.info)
-  \`\`\`
+          \`\`\`
+          $(lcov --list coverage.info)
+          \`\`\`
 
-  </details>
-  EOF
-  echo "$LINE_COVERAGE" > .previous_line_coverage
+          </details>
+          EOF
 
-- name: Generate function coverage comment
-  if: github.event_name == 'pull_request'
-  run: |
-    # Extract function coverage (second percentage)
-    FUNC_COVERAGE=$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | sed -n '2p' | cut -d'%' -f1)
-    # Get previous function coverage or default to 0.0
-    PREVIOUS_FUNC_COVERAGE=$(cat .previous_func_coverage 2>/dev/null || echo "0.0")
-    DIFF_FUNC=$(echo "$FUNC_COVERAGE - $PREVIOUS_FUNC_COVERAGE" | bc 2>/dev/null || echo "0")
-    DIFF_FUNC=$(printf "%.2f" $DIFF_FUNC)
-    if (( $(echo "$DIFF_FUNC > 0" | bc -l) )); then
-      CHANGE_FUNC="increased by ${DIFF_FUNC}%"
-      EMOJI_FUNC="🎉"
-    elif (( $(echo "$DIFF_FUNC < 0" | bc -l) )); then
-      CHANGE_FUNC="decreased by $(echo "${DIFF_FUNC#-}")%"
-      EMOJI_FUNC="🔻"
-    else
-      CHANGE_FUNC="unchanged"
-      EMOJI_FUNC="🔄"
-    fi
-    cat > coverage-func-comment.md << EOF
-## Function Coverage Report ${EMOJI_FUNC}
+          echo "$LINE_COVERAGE" > .previous_line_coverage
 
-Current function coverage: **${FUNC_COVERAGE}%**
-Previous function coverage: **${PREVIOUS_FUNC_COVERAGE}%**
-  Coverage has ${CHANGE_FUNC}
+      - name: Generate function coverage comment
+        if: github.event_name == 'pull_request'
+        run: |
+          FUNC_COVERAGE="$(lcov --list coverage.info | grep 'Total:' | grep -o '[0-9.]\+%' | sed -n '2p' | cut -d'%' -f1)"
+          PREVIOUS_FUNC_COVERAGE="$(cat .previous_func_coverage 2>/dev/null || echo "0.0")"
+          DIFF_FUNC="$(echo "$FUNC_COVERAGE - $PREVIOUS_FUNC_COVERAGE" | bc 2>/dev/null || echo "0")"
+          DIFF_FUNC="$(printf "%.2f" "$DIFF_FUNC")"
 
-  <details>
-  <summary>Click to see detailed coverage report</summary>
+          if (( $(echo "$DIFF_FUNC > 0" | bc -l) )); then
+            CHANGE_FUNC="increased by ${DIFF_FUNC}%"
+            EMOJI_FUNC="🎉"
+          elif (( $(echo "$DIFF_FUNC < 0" | bc -l) )); then
+            CHANGE_FUNC="decreased by $(echo "${DIFF_FUNC#-}")%"
+            EMOJI_FUNC="🔻"
+          else
+            CHANGE_FUNC="unchanged"
+            EMOJI_FUNC="🔄"
+          fi
 
-  \`\`\`
-  $(lcov --list coverage.info)
-  \`\`\`
+          cat > coverage-func-comment.md << EOF
+          ## Function Coverage Report ${EMOJI_FUNC}
 
-  </details>
-  EOF
-  echo "$FUNC_COVERAGE" > .previous_func_coverage
+          Current function coverage: **${FUNC_COVERAGE}%**
+          Previous function coverage: **${PREVIOUS_FUNC_COVERAGE}%**
+          Coverage has ${CHANGE_FUNC}
 
-- name: Upload coverage to Codecov
-  uses: codecov/codecov-action@v3
-  with:
-    files: ./coverage.info
-    fail_ci_if_error: false
-    verbose: true
+          <details>
+          <summary>Click to see detailed coverage report</summary>
 
-- name: Generate HTML coverage report
-  run: genhtml coverage.info --output-directory coverage_report
+          \`\`\`
+          $(lcov --list coverage.info)
+          \`\`\`
 
-- name: Upload coverage report artifact
-  uses: actions/upload-artifact@v4
-  with:
-    name: coverage-report
-    path: coverage_report/
+          </details>
+          EOF
 
-- name: Comment PR with line coverage info
-  if: github.event_name == 'pull_request'
-  uses: marocchino/sticky-pull-request-comment@v2
-  with:
-    recreate: true
-    path: coverage-line-comment.md
+          echo "$FUNC_COVERAGE" > .previous_func_coverage
 
-- name: Comment PR with function coverage info
-  if: github.event_name == 'pull_request'
-  uses: marocchino/sticky-pull-request-comment@v2
-  with:
-    recreate: true
-    path: coverage-func-comment.md
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.info
+          fail_ci_if_error: false
+          verbose: true
+
+      - name: Generate HTML coverage report
+        run: genhtml coverage.info --output-directory coverage_report
+
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage_report/
+
+      - name: Comment PR with line coverage info
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          recreate: true
+          path: coverage-line-comment.md
+
+      - name: Comment PR with function coverage info
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          recreate: true
+          path: coverage-func-comment.md
