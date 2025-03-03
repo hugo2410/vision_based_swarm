@@ -38,104 +38,67 @@ jobs:
       - name: Generate coverage comment
         if: github.event_name == 'pull_request'
         run: |
-          # Extract the line and function coverage percentages
-          LINE_COVERAGE=$(lcov --list coverage.info | grep 'Total:' | awk '{print $2}' | sed 's/%//g')
-          FUNCTION_COVERAGE=$(lcov --list coverage.info | grep 'Total:' | awk '{print $4}' | sed 's/%//g')
+          # Extract the coverage percentage
+          COVERAGE=$(lcov --list coverage.info | grep 'Total:' | awk '{print $2}' | sed 's/%//g')
 
-          # Make sure coverage values are not empty
-          if [ -z "$LINE_COVERAGE" ]; then
-          echo "Failed to extract line coverage percentage"
-          LINE_COVERAGE="0.0"
-          fi
-          if [ -z "$FUNCTION_COVERAGE" ]; then
-          echo "Failed to extract function coverage percentage"
-          FUNCTION_COVERAGE="0.0"
+          # Make sure COVERAGE is not empty
+          if [ -z "$COVERAGE" ]; then
+            echo "Failed to extract coverage percentage"
+            COVERAGE="0.0"
           fi
 
           # Try to get previous coverage from main branch
           git fetch origin ${{ github.base_ref }} 2>/dev/null || true
           git checkout FETCH_HEAD 2>/dev/null || true
-          if [ -f ".previous_line_coverage" ]; then
-          PREVIOUS_LINE_COVERAGE=$(cat .previous_line_coverage)
+          if [ -f ".previous_coverage" ]; then
+            PREVIOUS_COVERAGE=$(cat .previous_coverage)
           else
-          PREVIOUS_LINE_COVERAGE="0.0"
-          fi
-          if [ -f ".previous_function_coverage" ]; then
-          PREVIOUS_FUNCTION_COVERAGE=$(cat .previous_function_coverage)
-          else
-          PREVIOUS_FUNCTION_COVERAGE="0.0"
+            # If no previous coverage file exists, try to generate one
+            if [ -d "src" ]; then  # Only if source exists in base branch
+              lcov --directory . --capture --output-file prev_coverage.info --ignore-errors mismatch,gcov 2>/dev/null || true
+              lcov --remove prev_coverage.info '/usr/*' '*/tests/*' '*/build/*' --output-file prev_coverage.info 2>/dev/null || true
+              PREVIOUS_COVERAGE=$(lcov --list prev_coverage.info 2>/dev/null | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1 || echo "0.0")
+            else
+              PREVIOUS_COVERAGE="0.0"
+            fi
           fi
 
           # Return to PR branch
           git checkout ${{ github.sha }} 2>/dev/null || true
 
-          # Ensure previous coverage values are not empty
-          if [ -z "$PREVIOUS_LINE_COVERAGE" ]; then
-          PREVIOUS_LINE_COVERAGE="0.0"
-          fi
-          if [ -z "$PREVIOUS_FUNCTION_COVERAGE" ]; then
-          PREVIOUS_FUNCTION_COVERAGE="0.0"
+          # Ensure PREVIOUS_COVERAGE is not empty
+          if [ -z "$PREVIOUS_COVERAGE" ]; then
+            PREVIOUS_COVERAGE="0.0"
           fi
 
-          # Calculate the differences (with error handling)
-          LINE_DIFF=$(echo "$LINE_COVERAGE - $PREVIOUS_LINE_COVERAGE" | bc 2>/dev/null || echo "0")
-          FUNCTION_DIFF=$(echo "$FUNCTION_COVERAGE - $PREVIOUS_FUNCTION_COVERAGE" | bc 2>/dev/null || echo "0")
+          # Calculate the difference (with error handling)
+          DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc 2>/dev/null || echo "0")
 
-          # Format differences to 2 decimal places
-          LINE_DIFF=$(printf "%.2f" $LINE_DIFF)
-          FUNCTION_DIFF=$(printf "%.2f" $FUNCTION_DIFF)
+          # Format DIFF to 2 decimal places
+          DIFF=$(printf "%.2f" $DIFF)
 
-          # Determine if line coverage increased or decreased
-          if (( $(echo "$LINE_DIFF > 0" | bc -l) )); then
-          LINE_CHANGE="increased by ${LINE_DIFF}%"
-          LINE_EMOJI="🎉"
-          elif (( $(echo "$LINE_DIFF < 0" | bc -l) )); then
-          LINE_CHANGE="decreased by $(echo "${LINE_DIFF#-}")%"  # Remove minus sign
-          LINE_EMOJI="🔻"
+          # Determine if coverage increased or decreased
+          if (( $(echo "$DIFF > 0" | bc -l) )); then
+            CHANGE="increased by ${DIFF}%"
+            EMOJI="🎉"
+          elif (( $(echo "$DIFF < 0" | bc -l) )); then
+            CHANGE="decreased by $(echo "${DIFF#-}")%"  # Remove minus sign
+            EMOJI="🔻"
           else
-          LINE_CHANGE="unchanged"
-          LINE_EMOJI="🔄"
-          fi
-
-          # Determine if function coverage increased or decreased
-          if (( $(echo "$FUNCTION_DIFF > 0" | bc -l) )); then
-          FUNCTION_CHANGE="increased by ${FUNCTION_DIFF}%"
-          FUNCTION_EMOJI="🎉"
-          elif (( $(echo "$FUNCTION_DIFF < 0" | bc -l) )); then
-          FUNCTION_CHANGE="decreased by $(echo "${FUNCTION_DIFF#-}")%"  # Remove minus sign
-          FUNCTION_EMOJI="🔻"
-          else
-          FUNCTION_CHANGE="unchanged"
-          FUNCTION_EMOJI="🔄"
+            CHANGE="unchanged"
+            EMOJI="🔄"
           fi
 
           # Create markdown for the comment
-          cat > line-coverage-comment.md << EOF
-          ## Line Coverage Report ${LINE_EMOJI}
+          cat > coverage-comment.md << EOF
+          ## Code Coverage Report ${EMOJI}
 
-          Current line coverage: **${LINE_COVERAGE}%**
-          Previous line coverage: **${PREVIOUS_LINE_COVERAGE}%**
-          Line coverage has ${LINE_CHANGE}
-
-          <details>
-          <summary>Click to see detailed line coverage report</summary>
-
-          \`\`\`
-          $(lcov --list coverage.info)
-          \`\`\`
-
-          </details>
-          EOF
-
-          cat > function-coverage-comment.md << EOF
-          ## Function Coverage Report ${FUNCTION_EMOJI}
-
-          Current function coverage: **${FUNCTION_COVERAGE}%**
-          Previous function coverage: **${PREVIOUS_FUNCTION_COVERAGE}%**
-          Function coverage has ${FUNCTION_CHANGE}
+          Current coverage: **${COVERAGE}%**
+          Previous coverage: **${PREVIOUS_COVERAGE}%**
+          Coverage has ${CHANGE}
 
           <details>
-          <summary>Click to see detailed function coverage report</summary>
+          <summary>Click to see detailed coverage report</summary>
 
           \`\`\`
           $(lcov --list coverage.info)
@@ -145,22 +108,7 @@ jobs:
           EOF
 
           # Store the current coverage for future comparison
-          echo "$LINE_COVERAGE" > .previous_line_coverage
-          echo "$FUNCTION_COVERAGE" > .previous_function_coverage
-
-          - name: Comment PR with line coverage info
-            if: github.event_name == 'pull_request'
-            uses: marocchino/sticky-pull-request-comment@v2
-            with:
-              recreate: true
-              path: line-coverage-comment.md
-
-          - name: Comment PR with function coverage info
-            if: github.event_name == 'pull_request'
-            uses: marocchino/sticky-pull-request-comment@v2
-            with:
-              recreate: true
-              path: function-coverage-comment.md
+          echo "$COVERAGE" > .previous_coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
