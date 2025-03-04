@@ -1,0 +1,5 @@
+<map id="Plotter::plotTrajectories" name="Plotter::plotTrajectories">
+<area shape="rect" id="Node000001" title="Generate a static plot showing agent trajectories." alt="" coords="5,5,179,31"/>
+<area shape="rect" id="Node000002" href="$classSimulation.html#aed07d6fe40e9363eada4757c870a73af" title="Get the trajectory history for all agents." alt="" coords="227,5,423,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,15,213,15,213,21,179,21"/>
+</map>

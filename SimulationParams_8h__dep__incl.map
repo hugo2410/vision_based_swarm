@@ -1,0 +1,12 @@
+<map id="src/simulation/SimulationParams.h" name="src/simulation/SimulationParams.h">
+<area shape="rect" id="Node000001" title="Defines parameters class for simulation configuration." alt="" coords="5,5,193,45"/>
+<area shape="rect" id="Node000002" href="$main_8cpp.html" title="Main entry point for the vision&#45;based swarm simulation." alt="" coords="91,240,196,265"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,58,59,87,44,121,38,157,40,174,47,191,59,206,74,219,108,237,106,242,71,224,55,210,42,193,35,176,33,157,39,120,54,85,73,55"/>
+<area shape="rect" id="Node000003" href="$Plotter_8h.html" title="Defines the Plotter class for visualizing simulation results." alt="" coords="57,167,229,192"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,58,127,118,142,166,137,167,122,119,105,59"/>
+<area shape="rect" id="Node000004" href="$Simulation_8h_source.html" title=" " alt="" coords="137,93,337,119"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="145,50,218,91,215,95,143,54"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="146,206,146,240,141,240,141,206"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="247,132,251,162,249,178,243,193,230,210,215,224,180,242,177,238,212,219,227,206,238,191,244,177,245,162,242,133"/>
+<area shape="poly" id="edge6_Node000004_Node000003" title=" " alt="" coords="213,129,160,169,157,164,209,125"/>
+</map>

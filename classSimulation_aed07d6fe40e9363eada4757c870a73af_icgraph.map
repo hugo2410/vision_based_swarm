@@ -1,0 +1,7 @@
+<map id="Simulation::getTrajectories" name="Simulation::getTrajectories">
+<area shape="rect" id="Node000001" title="Get the trajectory history for all agents." alt="" coords="227,31,423,56"/>
+<area shape="rect" id="Node000002" href="$classPlotter.html#a387353b19e6640a2d616269f75fa1ca1" title="Generate a video animation of the simulation." alt="" coords="17,5,167,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,34,167,29,168,24,213,29"/>
+<area shape="rect" id="Node000003" href="$classPlotter.html#a7bc49894646b3d5b9cb6a8838e917576" title="Generate a static plot showing agent trajectories." alt="" coords="5,55,179,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,57,179,61,179,56,213,52"/>
+</map>

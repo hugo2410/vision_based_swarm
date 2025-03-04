@@ -1,0 +1,35 @@
+<map id="src/main.cpp" name="src/main.cpp">
+<area shape="rect" id="Node000001" title="Main entry point for the vision&#45;based swarm simulation." alt="" coords="383,5,489,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,91,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,31,105,81,104,76,382,26"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="115,79,181,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="390,33,195,81,194,76,388,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="205,79,285,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="406,33,290,76,288,71,404,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="309,79,373,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="422,33,369,72,366,68,419,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="377,299,437,324"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="434,32,406,112,390,168,379,226,379,250,394,286,389,288,373,251,373,225,385,166,401,110,429,30"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="541,299,603,324"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="446,30,493,109,522,166,549,224,568,284,563,286,544,226,517,168,488,112,441,32"/>
+<area shape="rect" id="Node000008" href="$Agent_8h_source.html" title=" " alt="" coords="389,225,534,251"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="440,31,461,211,456,211,435,31"/>
+<area shape="rect" id="Node000009" href="$Plotter_8h.html" title="Defines the Plotter class for visualizing simulation results." alt="" coords="684,79,833,104"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="488,28,694,73,693,78,487,33"/>
+<area shape="rect" id="Node000011" href="$Simulation_8h_source.html" title=" " alt="" coords="619,152,723,177"/>
+<area shape="poly" id="edge19_Node000001_Node000011" title=" " alt="" coords="482,28,536,47,592,76,628,107,656,139,652,143,624,111,589,81,534,52,480,33"/>
+<area shape="rect" id="Node000013" href="$SimulationParams_8h.html" title="Defines parameters class for simulation configuration." alt="" coords="806,225,1031,251"/>
+<area shape="poly" id="edge20_Node000001_Node000013" title=" " alt="" coords="489,18,578,23,683,33,781,50,819,62,847,77,876,107,896,143,910,180,917,211,912,213,904,181,891,145,871,110,844,81,817,67,779,55,683,38,578,28,489,24"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="454,253,426,289,422,286,450,249"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="481,248,544,289,541,293,478,253"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="815,299,873,324"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="762,104,771,168,781,209,797,249,824,287,820,290,792,252,776,211,766,169,757,105"/>
+<area shape="poly" id="edge12_Node000009_Node000011" title=" " alt="" coords="746,106,697,145,694,141,743,102"/>
+<area shape="poly" id="edge18_Node000009_Node000013" title=" " alt="" coords="774,102,898,214,894,218,770,106"/>
+<area shape="poly" id="edge14_Node000011_Node000007" title=" " alt="" coords="682,177,699,211,702,232,696,252,680,271,660,285,618,303,616,298,658,280,676,267,691,249,696,232,693,213,677,179"/>
+<area shape="poly" id="edge15_Node000011_Node000008" title=" " alt="" coords="638,180,509,223,508,218,636,175"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="609,225,681,251"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="669,179,656,213,651,212,664,177"/>
+<area shape="poly" id="edge16_Node000011_Node000013" title=" " alt="" coords="711,175,866,219,865,224,710,180"/>
+<area shape="poly" id="edge17_Node000013_Node000010" title=" " alt="" coords="909,253,868,291,864,287,905,249"/>
+</map>
