@@ -26,7 +26,6 @@ jobs:
           sudo cp lib/libgtest*.a /usr/lib/
           cd -
 
-
       - name: Create build directory
         run: mkdir -p build
 
@@ -52,3 +51,12 @@ jobs:
             find . -type f -executable -print
             exit 1
           fi
+
+      - name: Run All Unit Tests
+        working-directory: ${{ github.workspace }}/build
+        run: |
+          set -e
+          for test in $(find . -maxdepth 1 -type f -executable -name "test_*"); do
+            echo "Running $test..."
+            $test
+          done
