@@ -35,81 +35,6 @@ jobs:
           lcov --remove coverage.info '/usr/*' '*/tests/*' --output-file coverage.info --ignore-errors unused
           lcov --list coverage.info
 
-      - name: Generate coverage comment
-        if: github.event_name == 'pull_request'
-        run: |
-          # Extract the coverage percentage
-          COVERAGE=$(lcov --list coverage.info | grep 'Total:' | awk -F '|' '{print $2}' | awk '{print $1}' | tr -d '%')
-
-          # Make sure COVERAGE is not empty
-          if [ -z "$COVERAGE" ]; then
-            echo "Failed to extract coverage percentage"
-            COVERAGE="0.0"
-          fi
-
-          # Try to get previous coverage from main branch
-          git fetch origin ${{ github.base_ref }} 2>/dev/null || true
-          git checkout FETCH_HEAD 2>/dev/null || true
-          if [ -f ".previous_coverage" ]; then
-            PREVIOUS_COVERAGE=$(cat .previous_coverage)
-          else
-            # If no previous coverage file exists, try to generate one
-            if [ -d "src" ]; then  # Only if source exists in base branch
-              lcov --directory . --capture --output-file prev_coverage.info --ignore-errors mismatch,gcov 2>/dev/null || true
-              lcov --remove prev_coverage.info '/usr/*' '*/tests/*' '*/build/*' --output-file prev_coverage.info 2>/dev/null || true
-              PREVIOUS_COVERAGE=$(lcov --list prev_coverage.info 2>/dev/null | grep 'Total:' | grep -o '[0-9.]\+%' | cut -d'%' -f1 || echo "0.0")
-            else
-              PREVIOUS_COVERAGE="0.0"
-            fi
-          fi
-
-          # Return to PR branch
-          git checkout ${{ github.sha }} 2>/dev/null || true
-
-          # Ensure PREVIOUS_COVERAGE is not empty
-          if [ -z "$PREVIOUS_COVERAGE" ]; then
-            PREVIOUS_COVERAGE="0.0"
-          fi
-
-          # Calculate the difference (with error handling)
-          DIFF=$(echo "$COVERAGE - $PREVIOUS_COVERAGE" | bc 2>/dev/null || echo "0")
-
-          # Format DIFF to 2 decimal places
-          DIFF=$(printf "%.2f" $DIFF)
-
-          # Determine if coverage increased or decreased
-          if (( $(echo "$DIFF > 0" | bc -l) )); then
-            CHANGE="increased by ${DIFF}%"
-            EMOJI="🎉"
-          elif (( $(echo "$DIFF < 0" | bc -l) )); then
-            CHANGE="decreased by $(echo "${DIFF#-}")%"  # Remove minus sign
-            EMOJI="🔻"
-          else
-            CHANGE="unchanged"
-            EMOJI="🔄"
-          fi
-
-          # Create markdown for the comment
-          cat > coverage-comment.md << EOF
-          ## Code Coverage Report ${EMOJI}
-
-          Current coverage: **${COVERAGE}%**
-          Previous coverage: **${PREVIOUS_COVERAGE}%**
-          Coverage has ${CHANGE}
-
-          <details>
-          <summary>Click to see detailed coverage report</summary>
-
-          \`\`\`
-          $(lcov --list coverage.info)
-          \`\`\`
-
-          </details>
-          EOF
-
-          # Store the current coverage for future comparison
-          echo "$COVERAGE" > .previous_coverage
-
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -126,10 +51,3 @@ jobs:
         with:
           name: coverage-report
           path: coverage_report/
-
-      - name: Comment PR with coverage info
-        if: github.event_name == 'pull_request'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          recreate: true
-          path: coverage-comment.md
