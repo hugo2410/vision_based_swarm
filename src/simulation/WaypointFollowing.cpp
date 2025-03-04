@@ -45,7 +45,7 @@ std::vector<std::pair<double, double>> WaypointFollowing::generateAccelerations(
 
   // Controller parameters
   const double arrivalDistance =
-      2.0;  // When the agent considers itself at the waypoint
+      1.0;  // When the agent considers itself at the waypoint
   const double maxSpeed = 10.0;  // Maximum velocity
   const double timeStep = 0.01;  // Time step for simulation
   const double maxAccel = 10.0;  // Maximum acceleration magnitude
