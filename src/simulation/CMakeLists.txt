@@ -3,6 +3,7 @@ set(SIMULATION_SOURCES
         Agent.cpp
         Simulation.cpp
         Plotter.cpp
+        WaypointFollowing.cpp
 )
 
 # Define the header files
@@ -11,6 +12,7 @@ set(SIMULATION_HEADERS
         Simulation.h
         SimulationParams.h
         Plotter.h
+        WaypointFollowing.h
 )
 
 # Create a library for simulation components

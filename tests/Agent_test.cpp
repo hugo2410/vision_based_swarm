@@ -142,3 +142,11 @@ TEST(AgentTest, NegativeTimeStep) {
   EXPECT_DOUBLE_EQ(
       17.0, position.second);  // 20.0 + 4.0 * (-1.0) + 0.5 * 1.0 * (-1.0)^2
 }
+/**
+ * @brief Google Test main function
+ * Initializes and runs all test cases in Agent_test.cpp
+ */
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
