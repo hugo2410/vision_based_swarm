@@ -20,13 +20,20 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake libgtest-dev
-          # Build and install GTest (needed on some Ubuntu versions)
-          cd /usr/src/gtest
-          sudo cmake CMakeLists.txt
-          sudo make
-          sudo cp lib/libgtest*.a /usr/lib/
-          cd -
+          sudo apt-get install -y build-essential cmake
+
+      - name: Build and Install GoogleTest from Source
+        run: |
+          git clone https://github.com/google/googletest.git /tmp/googletest
+          cd /tmp/googletest
+          cmake -DCMAKE_INSTALL_PREFIX=/usr/local .
+          make -j$(nproc)
+          sudo make install
+
+      - name: Verify GTest Installation
+        run: |
+          ls -l /usr/local/lib | grep gtest
+          ls -l /usr/local/include/gtest
 
   # ✅ 3. Configure & Build Project
   build:
@@ -41,7 +48,7 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{ github.workspace }}/build
-        run: cmake ..
+        run: cmake -Dgtest_DIR=/usr/local/lib/cmake/GTest ..
 
       - name: Build Project
         working-directory: ${{ github.workspace }}/build
