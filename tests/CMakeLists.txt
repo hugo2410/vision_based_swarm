@@ -2,16 +2,13 @@
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-# Add test executables
-file(GLOB TEST_SOURCES "*.cpp")
-add_executable(unit_tests ${TEST_SOURCES})
+# Find all test files
+file(GLOB TEST_FILES "*.cpp")
 
-# Link against project library and GTest
-target_link_libraries(unit_tests
-        ${PROJECT_NAME}_lib
-        GTest::GTest
-        GTest::Main
-)
-
-# Add to test suite
-add_test(NAME unit_tests COMMAND unit_tests)
+# Loop over each test file and create a separate test executable
+foreach(TEST_FILE ${TEST_FILES})
+    get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)  # Extract test name without extension
+    add_executable(${TEST_NAME} ${TEST_FILE})
+    target_link_libraries(${TEST_NAME} ${PROJECT_NAME}_lib GTest::GTest GTest::Main)
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+endforeach()
