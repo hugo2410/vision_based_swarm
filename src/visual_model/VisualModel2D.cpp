@@ -29,11 +29,10 @@ void VisualModel2D::generateVisualFunction() {
   Vc.resize(s);
   Vs.resize(s);
 
-  double phi_step = (2 * M_PI) / s;
-  dPhi = phi_step;
+  dPhi = 2 * phi_max / (s - 1);
 
   for (int i = 0; i < s; i++) {
-    double phi = -M_PI + i * phi_step;
+    double phi = -phi_max + i * dPhi;
     Vc[i] = std::cos(phi);
     Vs[i] = std::sin(phi);
   }
@@ -49,7 +48,7 @@ VisualModel2D::computeVisualField(const std::vector<AgentState>& agents,
   double dPhi = 2 * M_PI / V_size;
 
   for (size_t j = 0; j < agents.size(); j++) {
-    if (i == j) continue;
+    if (static_cast<size_t>(i) == j) continue;
 
     Eigen::Vector2d rel_pos = agents[j].position - agents[i].position;
     double dist = rel_pos.norm();
@@ -87,18 +86,22 @@ VisualModel2D::computeVisualField(const std::vector<AgentState>& agents,
 Eigen::Matrix2d VisualModel2D::parameterVision2D(
     const std::vector<double>& V, const std::vector<double>& dV) {
   Eigen::Matrix2d Vup = Eigen::Matrix2d::Zero();
+
+  // Normalize by the total angle range
+  double normalization = 2 * phi_max;
+
   for (size_t i = 0; i < V.size(); i++) {
-    Vup(0, 0) += V[i] * Vc[i] * dPhi;
-    Vup(0, 1) += V[i] * Vs[i] * dPhi;
-    Vup(1, 0) += dV[i] * Vc[i];
-    Vup(1, 1) += dV[i] * Vs[i];
+    Vup(0, 0) += V[i] * Vc[i] * dPhi / normalization;
+    Vup(0, 1) += V[i] * Vs[i] * dPhi / normalization;
+    Vup(1, 0) += dV[i] * Vc[i] / normalization;
+    Vup(1, 1) += dV[i] * Vs[i] / normalization;
   }
   return Vup;
 }
 
 std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
     const std::vector<AgentState>& agents, double Vu, double Vp, double Vuu,
-    double Vpp, double dVu, double dVp, int focal_agent,
+    double Vpp, double dVu, double dVp, [[maybe_unused]] int focal_agent,
     Eigen::Vector2d next_wpt) {
   std::vector<ControlOutput> dU(agents.size());
   bool use_waypoint = (next_wpt.norm() > 0);
@@ -123,8 +126,19 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
     double yaw_error = yaw0_i - agents[i].heading;
     yaw_error = std::fmod(yaw_error + M_PI, 2 * M_PI) - M_PI;
 
-    double dU_lin = drag * (v0 - agents[i].speed) +
-                    Vuu * (Vu * Vup(0, 0) + dVu * Vup(1, 0));
+    // Adjust the linear acceleration calculation to ensure positive
+    // acceleration towards waypoint
+    double speed_error = v0 - agents[i].speed;
+    double dU_lin =
+        drag * speed_error + Vuu * (Vu * Vup(0, 0) + dVu * Vup(1, 0));
+
+    if (use_waypoint) {
+      Eigen::Vector2d rel_wpt = next_wpt - agents[i].position;
+      double dist_to_wpt = rel_wpt.norm();
+      // Add extra acceleration towards waypoint
+      dU_lin += std::min(acc_max, dist_to_wpt);
+    }
+
     double dU_ang = use_waypoint * ang_drag * yaw_error +
                     Vpp * (Vp * Vup(0, 1) + dVp * Vup(1, 1));
 
@@ -138,7 +152,7 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
 }
 
 Eigen::Vector2d VisualModel2D::computeLinearAcceleration(
-    double forward_acceleration, double yaw, double dt) {
+    double forward_acceleration, double yaw, [[maybe_unused]] double dt) {
   double ax = forward_acceleration * std::cos(yaw);
   double ay = forward_acceleration * std::sin(yaw);
   return Eigen::Vector2d(ax, ay);

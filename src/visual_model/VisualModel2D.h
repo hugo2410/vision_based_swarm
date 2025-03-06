@@ -35,6 +35,17 @@ class VisualModel2D {
   Eigen::Vector2d computeLinearAcceleration(double forward_acceleration,
                                             double yaw, double dt);
 
+  const std::vector<double>& getVc() const { return Vc; }
+  const std::vector<double>& getVs() const { return Vs; }
+  double getAccMax() const { return acc_max; }
+  double getYawRateMax() const { return yaw_rate_max; }
+
+  std::pair<std::vector<double>, std::vector<int>> computeVisualField(
+      const std::vector<AgentState>& agents, int i);
+
+  Eigen::Matrix2d parameterVision2D(const std::vector<double>& V,
+                                    const std::vector<double>& dV);
+
  private:
   int nPhi;
   double phi_max;
@@ -49,10 +60,6 @@ class VisualModel2D {
   double dPhi;
 
   void generateVisualFunction();
-  Eigen::Matrix2d parameterVision2D(const std::vector<double>& V,
-                                    const std::vector<double>& dV);
-  std::pair<std::vector<double>, std::vector<int>> computeVisualField(
-      const std::vector<AgentState>& agents, int i);
 };
 
 #endif  // SRC_VISUAL_MODEL_VISUALMODEL2D_H_
