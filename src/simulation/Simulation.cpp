@@ -100,16 +100,9 @@ void Simulation::update() {
 }
 
 void Simulation::setAgentAccelerations(
-    const std::vector<std::pair<double, double>>& accelerations) {
-  // Update agent accelerations from external source
-  if (accelerations.size() != agents.size()) {
-    std::cerr << "Warning: acceleration vector size (" << accelerations.size()
-              << ") doesn't match agent count (" << agents.size() << ")"
-              << std::endl;
-  }
-
-  size_t count = std::min(accelerations.size(), agents.size());
-  for (size_t i = 0; i < count; ++i) {
+    const std::vector<Eigen::Vector2d>& accelerations) {
+  // Update agent accelerations using Eigen::Vector2d
+  for (size_t i = 0; i < agents.size(); ++i) {
     agents[i].setAcceleration(accelerations[i]);
   }
 }
@@ -123,8 +116,8 @@ void Simulation::recordTrajectories() {
 
 std::vector<Agent>& Simulation::getAgents() { return agents; }
 
-const std::vector<std::vector<std::pair<double, double>>>&
-Simulation::getTrajectories() const {
+const std::vector<std::vector<Eigen::Vector2d>>& Simulation::getTrajectories()
+    const {
   return trajectories;
 }
 

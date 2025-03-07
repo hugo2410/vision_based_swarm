@@ -4,6 +4,7 @@
 #ifndef SRC_SIMULATION_SIMULATION_H_
 #define SRC_SIMULATION_SIMULATION_H_
 
+#include <Eigen/Dense>
 #include <random>
 #include <vector>
 
@@ -40,8 +41,7 @@ class Simulation {
    * @brief Set custom accelerations for agents from external source
    * @param accelerations Vector of acceleration pairs for each agent
    */
-  void setAgentAccelerations(
-      const std::vector<std::pair<double, double>>& accelerations);
+  void setAgentAccelerations(const std::vector<Eigen::Vector2d>& accelerations);
 
   /**
    * @brief Get a reference to all agents
@@ -53,8 +53,7 @@ class Simulation {
    * @brief Get the trajectory history for all agents
    * @return Const reference to the trajectory data
    */
-  const std::vector<std::vector<std::pair<double, double>>>& getTrajectories()
-      const;
+  const std::vector<std::vector<Eigen::Vector2d>>& getTrajectories() const;
 
   /**
    * @brief Get the current simulation time
@@ -88,7 +87,7 @@ class Simulation {
    *
    * Format: trajectories[agent_idx][time_step] = (x,y)
    */
-  std::vector<std::vector<std::pair<double, double>>> trajectories;
+  std::vector<std::vector<Eigen::Vector2d>> trajectories;
 };
 
 #endif  // SRC_SIMULATION_SIMULATION_H_

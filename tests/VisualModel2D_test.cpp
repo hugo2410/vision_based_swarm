@@ -144,11 +144,10 @@ TEST_F(VisualModel2DTest, ComputeLinearAcceleration) {
   // Test various angles
   std::vector<double> test_angles = {0, M_PI / 4, M_PI / 2, M_PI, -M_PI / 4};
   double forward_accel = 1.0;
-  double dt = 0.1;
 
   for (double yaw : test_angles) {
     Eigen::Vector2d acc =
-        visual_model->computeLinearAcceleration(forward_accel, yaw, dt);
+        visual_model->computeLinearAcceleration(forward_accel, yaw);
 
     EXPECT_NEAR(acc.x(), forward_accel * std::cos(yaw), 1e-6);
     EXPECT_NEAR(acc.y(), forward_accel * std::sin(yaw), 1e-6);

@@ -120,27 +120,33 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
     double yaw0_i = yaw0;
     if (use_waypoint) {
       Eigen::Vector2d rel_wpt = next_wpt - agents[i].position;
-      yaw0_i = std::atan2(rel_wpt.y(), rel_wpt.x());
+      std::cout << "rel_wpt: " << rel_wpt.x() << ", " << rel_wpt.y()
+                << std::endl;
+      std::cout << "agents[i].heading: " << agents[i].heading << std::endl;
+      std::cout << "next_wpt: " << next_wpt.x() << ", " << next_wpt.y()
+                << std::endl;
+      std::cout << "agents[i].position: " << agents[i].position.x() << ", "
+                << agents[i].position.y() << std::endl;
+      double wpt_angle = std::atan2(rel_wpt.y(), rel_wpt.x());
+      double yaw_error = wpt_angle - agents[i].heading;
+      yaw_error = std::fmod(yaw_error + M_PI, 2 * M_PI) - M_PI;
+      yaw0_i = wpt_angle;
     }
 
     double yaw_error = yaw0_i - agents[i].heading;
     yaw_error = std::fmod(yaw_error + M_PI, 2 * M_PI) - M_PI;
+    std::cout << "yaw_error: " << yaw_error << std::endl;
 
     // Adjust the linear acceleration calculation to ensure positive
     // acceleration towards waypoint
     double speed_error = v0 - agents[i].speed;
     double dU_lin =
         drag * speed_error + Vuu * (Vu * Vup(0, 0) + dVu * Vup(1, 0));
-
-    if (use_waypoint) {
-      Eigen::Vector2d rel_wpt = next_wpt - agents[i].position;
-      double dist_to_wpt = rel_wpt.norm();
-      // Add extra acceleration towards waypoint
-      dU_lin += std::min(acc_max, dist_to_wpt);
-    }
+    std::cout << "dU_lin: " << dU_lin << std::endl;
 
     double dU_ang = use_waypoint * ang_drag * yaw_error +
                     Vpp * (Vp * Vup(0, 1) + dVp * Vup(1, 1));
+    std::cout << "dU_ang: " << dU_ang << std::endl;
 
     dU_lin = std::clamp(dU_lin, -acc_max, acc_max);
     dU_ang = std::clamp(dU_ang, -yaw_rate_max, yaw_rate_max);
@@ -152,7 +158,10 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
 }
 
 Eigen::Vector2d VisualModel2D::computeLinearAcceleration(
-    double forward_acceleration, double yaw, [[maybe_unused]] double dt) {
+    double forward_acceleration, double yaw) {
+  if (forward_acceleration < 0) {
+    forward_acceleration = 0.5;
+  }
   double ax = forward_acceleration * std::cos(yaw);
   double ay = forward_acceleration * std::sin(yaw);
   return Eigen::Vector2d(ax, ay);
