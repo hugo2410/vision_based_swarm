@@ -101,10 +101,24 @@ void Simulation::update() {
 
 void Simulation::setAgentAccelerations(
     const std::vector<Eigen::Vector2d>& accelerations) {
-  // Update agent accelerations using Eigen::Vector2d
-  for (size_t i = 0; i < agents.size(); ++i) {
+  // Determine how many agents to update (minimum of agents size and
+  // accelerations size)
+  size_t numToUpdate = std::min(agents.size(), accelerations.size());
+
+  // If sizes don't match, output a warning
+  if (accelerations.size() != agents.size()) {
+    std::cerr << "Warning: Mismatch between acceleration vector size ("
+              << accelerations.size() << ") and number of agents ("
+              << agents.size() << "). Only updating " << numToUpdate
+              << " agents." << std::endl;
+  }
+
+  // Update agent accelerations for as many agents as we have accelerations for
+  for (size_t i = 0; i < numToUpdate; ++i) {
     agents[i].setAcceleration(accelerations[i]);
   }
+
+  // Note: Agents beyond the size of the accelerations vector remain unchanged
 }
 
 void Simulation::recordTrajectories() {
