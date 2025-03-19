@@ -130,13 +130,6 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
 
     if (use_waypoint) {
       Eigen::Vector2d rel_wpt = next_wpt - agents[i].position;
-      std::cout << "rel_wpt: " << rel_wpt.x() << ", " << rel_wpt.y()
-                << std::endl;
-      std::cout << "agents[i].heading: " << agents[i].heading << std::endl;
-      std::cout << "next_wpt: " << next_wpt.x() << ", " << next_wpt.y()
-                << std::endl;
-      std::cout << "agents[i].position: " << agents[i].position.x() << ", "
-                << agents[i].position.y() << std::endl;
 
       // Calculate angle to waypoint
       desired_heading = std::atan2(rel_wpt.y(), rel_wpt.x());
@@ -147,21 +140,15 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
       // Normalize to [-π, π] to ensure shortest turn direction
       while (yaw_error > M_PI) yaw_error -= 2.0 * M_PI;
       while (yaw_error < -M_PI) yaw_error += 2.0 * M_PI;
-
-      std::cout << "desired_heading: " << desired_heading << std::endl;
     }
-
-    std::cout << "yaw_error: " << yaw_error << std::endl;
 
     // Adjust the linear acceleration calculation
     double speed_error = v0 - agents[i].speed;
     double dU_lin =
         drag * speed_error + Vuu * (Vu * Vup(0, 0) + dVu * Vup(1, 0));
-    std::cout << "dU_lin: " << dU_lin << std::endl;
 
     double dU_ang = use_waypoint * ang_drag * yaw_error +
                     Vpp * (Vp * Vup(0, 1) + dVp * Vup(1, 1));
-    std::cout << "dU_ang: " << dU_ang << std::endl;
 
     dU_lin = std::clamp(dU_lin, -acc_max, acc_max);
     dU_ang = std::clamp(dU_ang, -yaw_rate_max, yaw_rate_max);

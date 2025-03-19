@@ -28,9 +28,9 @@ int main() {
   SimulationParams params;
 
   // Customize parameters
-  params.numAgents = 1;
+  params.numAgents = 5;
   params.timeStep = 0.01;
-  params.simulationTime = 2000.0;
+  params.simulationTime = 200.0;
   params.maxInitialVelocity = 10.0;
   params.maxInitialAcceleration = 0.0;  // Start with zero acceleration
   params.initPositionType = "grid";     // or "random"
@@ -91,8 +91,6 @@ int main() {
     auto commands = visual_model.computeVisualCommands(
         visual_agents, -1.0, -1.0, 0.5, 0.5, 0.2, 0.2, 0,
         params.waypoints[current_waypoint]);
-    std::cout << "Commands: " << commands[0].forward_acceleration << ", "
-              << commands[0].yaw_rate << std::endl;
     // Convert commands to accelerations
     std::vector<Eigen::Vector2d> accelerations;
     accelerations.reserve(commands.size());
@@ -106,13 +104,9 @@ int main() {
 
     // Update agent accelerations
     sim.setAgentAccelerations(accelerations);
-    std::cout << "Accelerations: " << accelerations[0].x() << ", "
-              << accelerations[0].y() << std::endl;
 
     // Update simulation state
     sim.update();
-    std::cout << "Velocity: " << sim.getAgents()[0].getVelocity().x() << ", "
-              << sim.getAgents()[0].getVelocity().y() << std::endl;
 
     // Display progress periodically
     if (step % progressInterval == 0) {
