@@ -124,7 +124,10 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
 
     Eigen::Matrix2d Vup = parameterVision2D(V, dV);
 
-    double yaw0_i = yaw0;
+    // Calculate desired heading and yaw error
+    double desired_heading = yaw0;  // Default desired heading
+    double yaw_error = 0.0;
+
     if (use_waypoint) {
       Eigen::Vector2d rel_wpt = next_wpt - agents[i].position;
       std::cout << "rel_wpt: " << rel_wpt.x() << ", " << rel_wpt.y()
@@ -134,18 +137,23 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
                 << std::endl;
       std::cout << "agents[i].position: " << agents[i].position.x() << ", "
                 << agents[i].position.y() << std::endl;
-      double wpt_angle = std::atan2(rel_wpt.y(), rel_wpt.x());
-      double yaw_error = wpt_angle - agents[i].heading;
-      yaw_error = std::fmod(yaw_error + M_PI, 2 * M_PI) - M_PI;
-      yaw0_i = wpt_angle;
+
+      // Calculate angle to waypoint
+      desired_heading = std::atan2(rel_wpt.y(), rel_wpt.x());
+
+      // Calculate yaw error (difference between desired and current heading)
+      yaw_error = desired_heading - agents[i].heading;
+
+      // Normalize to [-π, π] to ensure shortest turn direction
+      while (yaw_error > M_PI) yaw_error -= 2.0 * M_PI;
+      while (yaw_error < -M_PI) yaw_error += 2.0 * M_PI;
+
+      std::cout << "desired_heading: " << desired_heading << std::endl;
     }
 
-    double yaw_error = yaw0_i - agents[i].heading;
-    yaw_error = std::fmod(yaw_error + M_PI, 2 * M_PI) - M_PI;
     std::cout << "yaw_error: " << yaw_error << std::endl;
 
-    // Adjust the linear acceleration calculation to ensure positive
-    // acceleration towards waypoint
+    // Adjust the linear acceleration calculation
     double speed_error = v0 - agents[i].speed;
     double dU_lin =
         drag * speed_error + Vuu * (Vu * Vup(0, 0) + dVu * Vup(1, 0));
@@ -165,11 +173,18 @@ std::vector<VisualModel2D::ControlOutput> VisualModel2D::computeVisualCommands(
 }
 
 Eigen::Vector2d VisualModel2D::computeLinearAcceleration(
-    double forward_acceleration, double yaw) {
-  if (forward_acceleration < 0) {
-    forward_acceleration = 0.5;
-  }
-  double ax = forward_acceleration * std::cos(yaw);
-  double ay = forward_acceleration * std::sin(yaw);
-  return Eigen::Vector2d(ax, ay);
+    double forward_acceleration, double yaw_rate, double current_heading,
+    double current_speed) {
+  // Compute the body-frame lateral acceleration due to turning.
+  // It has magnitude (current_speed * yaw_rate)
+  double lateral_acceleration = current_speed * yaw_rate;
+
+  // Convert from body frame [forward; lateral] to world frame using a rotation
+  // matrix. Body frame: x-axis is forward, y-axis is to the left.
+  double acc_x_world = forward_acceleration * std::cos(current_heading) -
+                       lateral_acceleration * std::sin(current_heading);
+  double acc_y_world = forward_acceleration * std::sin(current_heading) +
+                       lateral_acceleration * std::cos(current_heading);
+
+  return Eigen::Vector2d(acc_x_world, acc_y_world);
 }

@@ -33,7 +33,9 @@ class VisualModel2D {
       Eigen::Vector2d next_wpt = Eigen::Vector2d::Zero());
 
   Eigen::Vector2d computeLinearAcceleration(double forward_acceleration,
-                                            double yaw);
+                                            double yaw_rate,
+                                            double current_heading,
+                                            double speed);
 
   const std::vector<double>& getVc() const { return Vc; }
   const std::vector<double>& getVs() const { return Vs; }

@@ -99,7 +99,8 @@ int main() {
 
     for (size_t i = 0; i < commands.size(); ++i) {
       Eigen::Vector2d acc = visual_model.computeLinearAcceleration(
-          commands[i].forward_acceleration, commands[i].yaw_rate);
+          commands[i].forward_acceleration, commands[i].yaw_rate,
+          visual_agents[i].heading, visual_agents[i].speed);
       accelerations.push_back(acc);
     }
 
