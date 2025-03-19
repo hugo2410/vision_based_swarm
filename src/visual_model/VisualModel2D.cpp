@@ -5,6 +5,7 @@
 #include "visual_model/VisualModel2D.h"
 
 #include <algorithm>
+#include <cmath>  // Include cmath for std::abs, std::round, etc.
 #include <iostream>
 #include <utility>
 #include <vector>
@@ -45,22 +46,28 @@ VisualModel2D::computeVisualField(const std::vector<AgentState>& agents,
   std::vector<double> V(V_size, 0);
   std::vector<int> V_neig(V_size, -1);
 
-  double dPhi = 2 * M_PI / V_size;
+  // Corrected: dPhi should be based on nPhi and phi_max, not 2*M_PI
+  double dPhi_local =
+      2 * phi_max / (V_size - 1);  // Consistent with generateVisualFunction
 
   for (size_t j = 0; j < agents.size(); j++) {
     if (static_cast<size_t>(i) == j) continue;
 
     Eigen::Vector2d rel_pos = agents[j].position - agents[i].position;
     double dist = rel_pos.norm();
+    // Corrected: Angle calculation and normalization
     double angle_to_j =
         std::atan2(rel_pos.y(), rel_pos.x()) - agents[i].heading;
+    angle_to_j = std::fmod(angle_to_j + M_PI, 2 * M_PI) -
+                 M_PI;  // Normalize to [-pi, pi]
 
-    if (angle_to_j > M_PI) angle_to_j -= 2 * M_PI;
-    if (angle_to_j < -M_PI) angle_to_j += 2 * M_PI;
-
+    // Corrected: Use phi_max and R to determine visibility
     if (std::abs(angle_to_j) <= phi_max + std::atan2(R, dist)) {
-      int px_phi_c = static_cast<int>(std::round((M_PI + angle_to_j) / dPhi));
-      int d_px = static_cast<int>(std::round(std::atan2(R, dist) / dPhi));
+      // Corrected: Pixel calculation based on dPhi_local
+      int px_phi_c = static_cast<int>(
+          std::round((angle_to_j + phi_max) /
+                     dPhi_local));  // Shift to [0, 2*phi_max] range
+      int d_px = static_cast<int>(std::round(std::atan2(R, dist) / dPhi_local));
 
       int start = std::max(0, px_phi_c - d_px);
       int end = std::min(V_size - 1, px_phi_c + d_px);
