@@ -145,3 +145,7 @@ TEST_F(PlotterTest, GeneratesVideoCommand) {
   EXPECT_NE(capturedOutput.find("--output=test_video.mp4"), std::string::npos);
   EXPECT_NE(capturedOutput.find("--fps=30"), std::string::npos);
 }
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
