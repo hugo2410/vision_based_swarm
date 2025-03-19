@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential libgtest-dev lcov gcovr bc
+          sudo apt-get install -y cmake build-essential libgtest-dev lcov gcovr bc libeigen3-dev
 
       - name: Configure CMake with coverage
         run: cmake -B build -DCODE_COVERAGE=ON
