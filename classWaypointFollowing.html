@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Vision based swarming: WaypointFollowing Class Reference</title>
+<title>Vision based swarming: WaypointFollowing&lt; VectorType &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,65 +72,95 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classWaypointFollowing-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">WaypointFollowing Class Reference</div></div>
+  <div class="headertitle"><div class="title">WaypointFollowing&lt; VectorType &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a00303440896a331f4fb777cff4c6576c" id="r_a00303440896a331f4fb777cff4c6576c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWaypointFollowing.html#a00303440896a331f4fb777cff4c6576c">WaypointFollowing</a> (std::vector&lt; std::pair&lt; double, double &gt; &gt; waypoints={})</td></tr>
-<tr class="memdesc:a00303440896a331f4fb777cff4c6576c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with optional waypoints.  <br /></td></tr>
-<tr class="separator:a00303440896a331f4fb777cff4c6576c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a464124c3899ef467ae6e74a631724024" id="r_a464124c3899ef467ae6e74a631724024"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::pair&lt; double, double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWaypointFollowing.html#a464124c3899ef467ae6e74a631724024">generateAccelerations</a> (const std::vector&lt; <a class="el" href="classAgent.html">Agent</a> &gt; &amp;agents)</td></tr>
-<tr class="memdesc:a464124c3899ef467ae6e74a631724024"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate example accelerations for agents following waypoints.  <br /></td></tr>
-<tr class="separator:a464124c3899ef467ae6e74a631724024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdf9755c360330793200b2da406b6dec" id="r_acdf9755c360330793200b2da406b6dec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">WaypointFollowing</a> (std::vector&lt; <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt; waypoints={}, <a class="el" href="classWaypointFollowing.html">const</a> <a class="el" href="classSimulationParams.html">SimulationParams</a> &amp;params=<a class="el" href="classSimulationParams.html">SimulationParams</a>())</td></tr>
+<tr class="memdesc:acdf9755c360330793200b2da406b6dec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with optional waypoints.  <br /></td></tr>
+<tr class="separator:acdf9755c360330793200b2da406b6dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b0402923e3ae04d4ff233662601f23b" id="r_a6b0402923e3ae04d4ff233662601f23b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector</a>&lt; <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classWaypointFollowing.html#a6b0402923e3ae04d4ff233662601f23b">generateAccelerations</a> (<a class="el" href="classWaypointFollowing.html">const</a> <a class="el" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector</a>&lt; <a class="el" href="classAgent.html">Agent</a> &gt; &amp;agents)</td></tr>
+<tr class="memdesc:a6b0402923e3ae04d4ff233662601f23b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate example accelerations for agents following waypoints.  <br /></td></tr>
+<tr class="separator:a6b0402923e3ae04d4ff233662601f23b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43bf5fdc855dd664a7a572e6da1cfdc0" id="r_a43bf5fdc855dd664a7a572e6da1cfdc0"><td class="memItemLeft" align="right" valign="top"><a id="a43bf5fdc855dd664a7a572e6da1cfdc0" name="a43bf5fdc855dd664a7a572e6da1cfdc0"></a>
+<a class="el" href="classWaypointFollowing.html">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><b>isWaypointReached</b> (<a class="el" href="classWaypointFollowing.html">const</a> <a class="el" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector</a>&lt; <a class="el" href="classAgent.html">Agent</a> &gt; &amp;agents, <a class="el" href="classWaypointFollowing.html">const</a> <a class="el" href="classWaypointFollowing.html">VectorType</a> &amp;<a class="el" href="classWaypointFollowing.html">waypoint</a>, <a class="el" href="classWaypointFollowing.html">double</a> <a class="el" href="classWaypointFollowing.html">reach_distance</a>)</td></tr>
+<tr class="separator:a43bf5fdc855dd664a7a572e6da1cfdc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a00303440896a331f4fb777cff4c6576c" name="a00303440896a331f4fb777cff4c6576c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a00303440896a331f4fb777cff4c6576c">&#9670;&#160;</a></span>WaypointFollowing()</h2>
+<a id="acdf9755c360330793200b2da406b6dec" name="acdf9755c360330793200b2da406b6dec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdf9755c360330793200b2da406b6dec">&#9670;&#160;</a></span>WaypointFollowing()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
+<div class="memtemplate">
+template&lt;<a class="el" href="classWaypointFollowing.html">typename</a> <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">WaypointFollowing::WaypointFollowing </td>
+          <td class="memname"><a class="el" href="classWaypointFollowing.html">WaypointFollowing</a>&lt; <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt;<a class="el" href="classWaypointFollowing.html">::WaypointFollowing</a> </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; std::pair&lt; double, double &gt; &gt;&#160;</td>
-          <td class="paramname"><em>waypoints</em> = <code>{}</code></td><td>)</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt;&#160;</td>
+          <td class="paramname"><em>waypoints</em> = <code>{}</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classWaypointFollowing.html">const</a> <a class="el" href="classSimulationParams.html">SimulationParams</a> &amp;&#160;</td>
+          <td class="paramname"><em>params</em> = <code><a class="el" href="classSimulationParams.html">SimulationParams</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Constructor with optional waypoints. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">waypoints</td><td>Custom waypoints (optional, defaults will be used if empty) </td></tr>
+    <tr><td class="paramname">params</td><td>Reference to simulation parameters </td></tr>
   </table>
   </dd>
 </dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classWaypointFollowing_acdf9755c360330793200b2da406b6dec_icgraph.png" border="0" usemap="#aclassWaypointFollowing_acdf9755c360330793200b2da406b6dec_icgraph" alt=""/></div>
+<map name="aclassWaypointFollowing_acdf9755c360330793200b2da406b6dec_icgraph" id="aclassWaypointFollowing_acdf9755c360330793200b2da406b6dec_icgraph">
+<area shape="rect" title="Constructor with optional waypoints." alt="" coords="300,122,453,162"/>
+<area shape="rect" href="classPlotter.html#a387353b19e6640a2d616269f75fa1ca1" title="Generate a video animation of the simulation." alt="" coords="53,5,204,31"/>
+<area shape="poly" title=" " alt="" coords="345,114,303,77,251,44,203,29,205,24,253,40,306,73,348,110"/>
+<area shape="rect" href="classSimulation.html#a6e7d1624005c861948f1a07e6986770e" title="Initialize all agents with starting positions and velocities." alt="" coords="51,55,207,80"/>
+<area shape="poly" title=" " alt="" coords="319,119,251,94,206,83,207,77,253,89,321,114"/>
+<area shape="rect" href="classPlotter.html#a7bc49894646b3d5b9cb6a8838e917576" title="Generate a static plot showing agent trajectories." alt="" coords="42,104,215,129"/>
+<area shape="poly" title=" " alt="" coords="286,135,215,128,216,123,287,130"/>
+<area shape="rect" href="classSimulation.html#a3b1b4edafbd7bd036ec4282591021eb9" title="Set custom accelerations for agents from external source." alt="" coords="5,153,252,179"/>
+<area shape="poly" title=" " alt="" coords="287,153,253,157,252,151,286,148"/>
+<area shape="rect" href="classSimulation.html#a11a97cdc0f17bb83812859758f068381" title="Constructor." alt="" coords="43,203,214,228"/>
+<area shape="poly" title=" " alt="" coords="317,170,253,193,202,205,201,200,251,187,315,165"/>
+<area shape="rect" href="classSimulationParams.html#aefe5896c4aed68905d41d321a0c37fc6" title="Default constructor with reasonable default values." alt="" coords="19,253,238,293"/>
+<area shape="poly" title=" " alt="" coords="347,173,305,209,253,242,221,255,219,250,251,237,301,205,344,169"/>
+</map>
+</div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a464124c3899ef467ae6e74a631724024" name="a464124c3899ef467ae6e74a631724024"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a464124c3899ef467ae6e74a631724024">&#9670;&#160;</a></span>generateAccelerations()</h2>
+<a id="a6b0402923e3ae04d4ff233662601f23b" name="a6b0402923e3ae04d4ff233662601f23b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b0402923e3ae04d4ff233662601f23b">&#9670;&#160;</a></span>generateAccelerations()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;<a class="el" href="classWaypointFollowing.html">typename</a> <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; std::pair&lt; double, double &gt; &gt; WaypointFollowing::generateAccelerations </td>
+          <td class="memname"><a class="el" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector</a>&lt; <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt; <a class="el" href="classWaypointFollowing.html">WaypointFollowing</a>&lt; <a class="el" href="classWaypointFollowing.html">VectorType</a> &gt;::generateAccelerations </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; <a class="el" href="classAgent.html">Agent</a> &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classWaypointFollowing.html">const</a> <a class="el" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector</a>&lt; <a class="el" href="classAgent.html">Agent</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>agents</em></td><td>)</td>
           <td></td>
         </tr>
@@ -148,9 +178,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>src/simulation/<a class="el" href="WaypointFollowing_8h_source.html">WaypointFollowing.h</a></li>
-<li>src/simulation/<b>WaypointFollowing.cpp</b></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

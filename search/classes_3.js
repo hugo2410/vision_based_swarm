@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['waypointfollowing_0',['WaypointFollowing',['../classWaypointFollowing.html',1,'']]]
+  ['simulation_0',['Simulation',['../classSimulation.html',1,'']]],
+  ['simulationparams_1',['SimulationParams',['../classSimulationParams.html',1,'']]]
 ];

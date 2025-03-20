@@ -1,0 +1,15 @@
+<map id="WaypointFollowing::WaypointFollowing" name="WaypointFollowing::WaypointFollowing">
+<area shape="rect" id="Node000001" title="Constructor with optional waypoints." alt="" coords="300,122,453,162"/>
+<area shape="rect" id="Node000002" href="$classPlotter.html#a387353b19e6640a2d616269f75fa1ca1" title="Generate a video animation of the simulation." alt="" coords="53,5,204,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="345,114,303,77,251,44,203,29,205,24,253,40,306,73,348,110"/>
+<area shape="rect" id="Node000003" href="$classSimulation.html#a6e7d1624005c861948f1a07e6986770e" title="Initialize all agents with starting positions and velocities." alt="" coords="51,55,207,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="319,119,251,94,206,83,207,77,253,89,321,114"/>
+<area shape="rect" id="Node000004" href="$classPlotter.html#a7bc49894646b3d5b9cb6a8838e917576" title="Generate a static plot showing agent trajectories." alt="" coords="42,104,215,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="286,135,215,128,216,123,287,130"/>
+<area shape="rect" id="Node000005" href="$classSimulation.html#a3b1b4edafbd7bd036ec4282591021eb9" title="Set custom accelerations for agents from external source." alt="" coords="5,153,252,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="287,153,253,157,252,151,286,148"/>
+<area shape="rect" id="Node000006" href="$classSimulation.html#a11a97cdc0f17bb83812859758f068381" title="Constructor." alt="" coords="43,203,214,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="317,170,253,193,202,205,201,200,251,187,315,165"/>
+<area shape="rect" id="Node000007" href="$classSimulationParams.html#aefe5896c4aed68905d41d321a0c37fc6" title="Default constructor with reasonable default values." alt="" coords="19,253,238,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="347,173,305,209,253,242,221,255,219,250,251,237,301,205,344,169"/>
+</map>

@@ -91,26 +91,39 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;simulation/Agent.h&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classWaypointFollowing.html">   12</a></span><span class="keyword">class </span><a class="code hl_class" href="classWaypointFollowing.html">WaypointFollowing</a> {</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">explicit</span> <a class="code hl_class" href="classWaypointFollowing.html">WaypointFollowing</a>(</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      std::vector&lt;std::pair&lt;double, double&gt;&gt; waypoints = {});</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  std::vector&lt;std::pair&lt;double, double&gt;&gt; <a class="code hl_function" href="classWaypointFollowing.html#a464124c3899ef467ae6e74a631724024">generateAccelerations</a>(</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>      <span class="keyword">const</span> std::vector&lt;Agent&gt;&amp; agents);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  std::vector&lt;std::pair&lt;double, double&gt;&gt; waypoints_;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  std::vector&lt;int&gt;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      currentWaypointIndices_;  <span class="comment">// Tracks each agent&#39;s current waypoint</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>};</div>
-</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="SimulationParams_8h.html">simulation/SimulationParams.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VectorType&gt;</div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classWaypointFollowing.html">   14</a></span><span class="keyword">class </span><a class="code hl_class" href="classWaypointFollowing.html">WaypointFollowing</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">   22</a></span>  <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">WaypointFollowing</a>(<a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;VectorType&gt;</a> waypoints = {},</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                    <span class="keyword">const</span> <a class="code hl_class" href="classSimulationParams.html">SimulationParams</a>&amp; params = <a class="code hl_class" href="classSimulationParams.html">SimulationParams</a>());</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classWaypointFollowing.html#a6b0402923e3ae04d4ff233662601f23b">   30</a></span>  <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;VectorType&gt;</a> <a class="code hl_function" href="classWaypointFollowing.html#a6b0402923e3ae04d4ff233662601f23b">generateAccelerations</a>(</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>      <span class="keyword">const</span> <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;Agent&gt;</a>&amp; agents);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">bool</span> isWaypointReached(<span class="keyword">const</span> <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;Agent&gt;</a>&amp; agents,</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                         <span class="keyword">const</span> <a class="code hl_class" href="classWaypointFollowing.html">VectorType</a>&amp; <a class="code hl_class" href="classWaypointFollowing.html">waypoint</a>, <span class="keywordtype">double</span> <a class="code hl_class" href="classWaypointFollowing.html">reach_distance</a>);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif  </span><span class="comment">// SRC_SIMULATION_WAYPOINTFOLLOWING_H_</span></div>
-<div class="ttc" id="aclassWaypointFollowing_html"><div class="ttname"><a href="classWaypointFollowing.html">WaypointFollowing</a></div><div class="ttdef"><b>Definition</b> WaypointFollowing.h:12</div></div>
-<div class="ttc" id="aclassWaypointFollowing_html_a464124c3899ef467ae6e74a631724024"><div class="ttname"><a href="classWaypointFollowing.html#a464124c3899ef467ae6e74a631724024">WaypointFollowing::generateAccelerations</a></div><div class="ttdeci">std::vector&lt; std::pair&lt; double, double &gt; &gt; generateAccelerations(const std::vector&lt; Agent &gt; &amp;agents)</div><div class="ttdoc">Generate example accelerations for agents following waypoints.</div><div class="ttdef"><b>Definition</b> WaypointFollowing.cpp:37</div></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;VectorType&gt;</a> waypoints_;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;int&gt;</a></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>      currentWaypointIndices_;  <span class="comment">// Tracks each agent&#39;s current waypoint</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <a class="code hl_class" href="classSimulationParams.html">SimulationParams</a> params_;     <span class="comment">// Reference to simulation parameters</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <a class="code hl_class" href="classWaypointFollowing.html">VectorType</a> computeSwarmCenter(<span class="keyword">const</span> <a class="code hl_function" href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">std::vector&lt;Agent&gt;</a>&amp; agents);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
+</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;WaypointFollowing.tpp&quot;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif  </span><span class="comment">// SRC_SIMULATION_WAYPOINTFOLLOWING_H_</span></div>
+<div class="ttc" id="aSimulationParams_8h_html"><div class="ttname"><a href="SimulationParams_8h.html">SimulationParams.h</a></div><div class="ttdoc">Defines parameters class for simulation configuration.</div></div>
+<div class="ttc" id="aclassSimulationParams_html"><div class="ttname"><a href="classSimulationParams.html">SimulationParams</a></div><div class="ttdoc">Contains all parameters for configuring the simulation.</div><div class="ttdef"><b>Definition</b> SimulationParams.h:27</div></div>
+<div class="ttc" id="aclassWaypointFollowing_html"><div class="ttname"><a href="classWaypointFollowing.html">WaypointFollowing</a></div><div class="ttdef"><b>Definition</b> WaypointFollowing.h:14</div></div>
+<div class="ttc" id="aclassWaypointFollowing_html_a6b0402923e3ae04d4ff233662601f23b"><div class="ttname"><a href="classWaypointFollowing.html#a6b0402923e3ae04d4ff233662601f23b">WaypointFollowing::generateAccelerations</a></div><div class="ttdeci">std::vector&lt; VectorType &gt; generateAccelerations(const std::vector&lt; Agent &gt; &amp;agents)</div><div class="ttdoc">Generate example accelerations for agents following waypoints.</div></div>
+<div class="ttc" id="aclassWaypointFollowing_html_acdf9755c360330793200b2da406b6dec"><div class="ttname"><a href="classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec">WaypointFollowing::WaypointFollowing</a></div><div class="ttdeci">WaypointFollowing(std::vector&lt; VectorType &gt; waypoints={}, const SimulationParams &amp;params=SimulationParams())</div><div class="ttdoc">Constructor with optional waypoints.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

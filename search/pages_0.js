@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vision_5fbased_5fsawrm_0',['vision_based_sawrm',['../md_README.html',1,'']]]
+  ['based_20swarm_20control_0',['Vision based swarm control',['../md_README.html',1,'']]]
 ];

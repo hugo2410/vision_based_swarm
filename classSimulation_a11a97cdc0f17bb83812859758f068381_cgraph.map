@@ -1,0 +1,5 @@
+<map id="Simulation::Simulation" name="Simulation::Simulation">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,13,176,38"/>
+<area shape="rect" id="Node000002" href="$classWaypointFollowing.html#acdf9755c360330793200b2da406b6dec" title="Constructor with optional waypoints." alt="" coords="224,5,377,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,23,210,23,210,28,176,28"/>
+</map>
