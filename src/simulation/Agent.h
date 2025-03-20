@@ -4,6 +4,7 @@
 #ifndef SRC_SIMULATION_AGENT_H_
 #define SRC_SIMULATION_AGENT_H_
 
+#include <Eigen/Dense>
 #include <utility>
 #include <vector>
 
@@ -29,28 +30,28 @@ class Agent {
    *
    * @param position A pair representing the (x, y) coordinates of the agent.
    */
-  void setPosition(const std::pair<double, double>& position);
+  void setPosition(const Eigen::Vector2d& position);
 
   /**
    * @brief Sets the velocity of the agent.
    *
    * @param vel A pair representing the (x, y) velocity of the agent.
    */
-  void setVelocity(const std::pair<double, double>& vel);
+  void setVelocity(const Eigen::Vector2d& vel);
 
   /**
    * @brief Sets the acceleration of the agent.
    *
    * @param acc A pair representing the (x, y) acceleration of the agent.
    */
-  void setAcceleration(const std::pair<double, double>& acc);
+  void setAcceleration(const Eigen::Vector2d& acc);
 
   /**
    * @brief Gets the current position of the agent.
    *
    * @return A pair representing the (x, y) coordinates of the agent.
    */
-  std::pair<double, double> getPosition() const;
+  Eigen::Vector2d getPosition() const;
 
   /**
    * @brief Updates the state of the agent based on acceleration and time step.
@@ -68,7 +69,7 @@ class Agent {
    * @return A pair representing the (x, y) components of the agent's
    * acceleration.
    */
-  std::pair<double, double> getAcceleration() const;
+  Eigen::Vector2d getAcceleration() const;
 
   /**
    * @brief Gets the current velocity of the agent.
@@ -76,23 +77,23 @@ class Agent {
    * @return A pair representing the (x, y) components of the agent's
    * velocity.
    */
-  std::pair<double, double> getVelocity() const;
+  Eigen::Vector2d getVelocity() const;
 
  private:
   /**
    * @brief The current position of the agent in 2D space (x, y).
    */
-  std::pair<double, double> position;
+  Eigen::Vector2d position;
 
   /**
    * @brief The current velocity of the agent in 2D space (vx, vy).
    */
-  std::pair<double, double> velocity;
+  Eigen::Vector2d velocity;
 
   /**
    * @brief The current acceleration of the agent in 2D space (ax, ay).
    */
-  std::pair<double, double> acceleration;
+  Eigen::Vector2d acceleration;
 };
 
 #endif  // SRC_SIMULATION_AGENT_H_

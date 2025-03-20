@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 
+#include <Eigen/Dense>
 #include <vector>
 
 #include "simulation/Agent.h"
@@ -17,8 +18,8 @@ class WaypointFollowingTest : public ::testing::Test {
   void SetUp() override {
     agents = {Agent(), Agent(), Agent()};
     for (size_t i = 0; i < agents.size(); ++i) {
-      agents[i].setPosition({i * 10.0, i * 10.0});
-      agents[i].setVelocity({0.0, 0.0});
+      agents[i].setPosition(Eigen::Vector2d(i * 10.0, i * 10.0));
+      agents[i].setVelocity(Eigen::Vector2d(0.0, 0.0));
     }
   }
 
@@ -29,15 +30,13 @@ class WaypointFollowingTest : public ::testing::Test {
  * @brief Test default waypoint behavior
  */
 TEST_F(WaypointFollowingTest, DefaultWaypoints) {
-  WaypointFollowing controller;
+  WaypointFollowing<Eigen::Vector2d> controller;
 
   auto accelerations = controller.generateAccelerations(agents);
   ASSERT_EQ(accelerations.size(), agents.size());
 
   for (const auto& accel : accelerations) {
-    EXPECT_LE(std::abs(accel.first),
-              10.0);  // Should not exceed max acceleration
-    EXPECT_LE(std::abs(accel.second), 10.0);
+    EXPECT_LE(accel.norm(), 10.0);  // Should not exceed max acceleration
   }
 }
 
@@ -45,9 +44,10 @@ TEST_F(WaypointFollowingTest, DefaultWaypoints) {
  * @brief Test custom waypoints
  */
 TEST_F(WaypointFollowingTest, CustomWaypoints) {
-  std::vector<std::pair<double, double>> customWaypoints = {
-      {0.0, 0.0}, {50.0, 50.0}, {100.0, 100.0}};
-  WaypointFollowing controller(customWaypoints);
+  std::vector<Eigen::Vector2d> customWaypoints = {
+      Eigen::Vector2d(0.0, 0.0), Eigen::Vector2d(50.0, 50.0),
+      Eigen::Vector2d(100.0, 100.0)};
+  WaypointFollowing<Eigen::Vector2d> controller(customWaypoints);
 
   auto accelerations = controller.generateAccelerations(agents);
   ASSERT_EQ(accelerations.size(), agents.size());
@@ -57,18 +57,18 @@ TEST_F(WaypointFollowingTest, CustomWaypoints) {
  * @brief Test if waypoints correctly update
  */
 TEST_F(WaypointFollowingTest, WaypointSwitching) {
-  WaypointFollowing controller;
+  WaypointFollowing<Eigen::Vector2d> controller;
 
   // Move an agent near a waypoint
-  agents[0].setPosition({19.0, 19.0});  // Close to default first waypoint
+  agents[0].setPosition(
+      Eigen::Vector2d(19.0, 19.0));  // Close to default first waypoint
 
   auto accelerations1 = controller.generateAccelerations(agents);
 
   // Move the agent further
-  agents[0].setPosition({20.0, 20.0});
+  agents[0].setPosition(Eigen::Vector2d(20.0, 20.0));
   auto accelerations2 = controller.generateAccelerations(agents);
-  EXPECT_LE(accelerations1[0].first, accelerations2[0].first);
-  EXPECT_LE(accelerations1[0].second, accelerations2[0].first);
+  EXPECT_LE(accelerations1[0].norm(), accelerations2[0].norm());
 }
 
 int main(int argc, char** argv) {

@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake
+          sudo apt-get install -y build-essential cmake libeigen3-dev
           # Install Google Test
           sudo apt-get install -y libgtest-dev
           # Build and install GTest from source (necessary on some Ubuntu versions)

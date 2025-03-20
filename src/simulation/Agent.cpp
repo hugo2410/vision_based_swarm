@@ -5,37 +5,29 @@
 
 #include "Agent.h"
 
+#include <Eigen/Dense>
 #include <utility>
 #include <vector>
 
 Agent::Agent()
-    : position({0.0, 0.0}), velocity({0.0, 0.0}), acceleration({0.0, 0.0}) {}
+    : position(Eigen::Vector2d::Zero()),
+      velocity(Eigen::Vector2d::Zero()),
+      acceleration(Eigen::Vector2d::Zero()) {}
 
-void Agent::setPosition(const std::pair<double, double>& pos) {
-  position = pos;
-}
+void Agent::setPosition(const Eigen::Vector2d& pos) { position = pos; }
 
-void Agent::setVelocity(const std::pair<double, double>& vel) {
-  velocity = vel;
-}
+void Agent::setVelocity(const Eigen::Vector2d& vel) { velocity = vel; }
 
-void Agent::setAcceleration(const std::pair<double, double>& acc) {
-  acceleration = acc;
-}
+void Agent::setAcceleration(const Eigen::Vector2d& acc) { acceleration = acc; }
 
-std::pair<double, double> Agent::getPosition() const { return position; }
+Eigen::Vector2d Agent::getPosition() const { return position; }
 
-std::pair<double, double> Agent::getVelocity() const { return velocity; }
+Eigen::Vector2d Agent::getVelocity() const { return velocity; }
 
-std::pair<double, double> Agent::getAcceleration() const {
-  return acceleration;
-}
+Eigen::Vector2d Agent::getAcceleration() const { return acceleration; }
 
 void Agent::updateState(double timeStep) {
   // Update velocity and position using the agent's internal acceleration
-  velocity.first += acceleration.first * timeStep;
-  velocity.second += acceleration.second * timeStep;
-
-  position.first += velocity.first * timeStep;
-  position.second += velocity.second * timeStep;
+  velocity += acceleration * timeStep;
+  position += velocity * timeStep;
 }

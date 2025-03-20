@@ -29,7 +29,7 @@ void Plotter::plotTrajectories(const std::string& filename) {
     const auto& agentTraj = trajectories[i];
 
     for (size_t j = 0; j < agentTraj.size(); ++j) {
-      dataFile << "    [" << agentTraj[j].first << ", " << agentTraj[j].second
+      dataFile << "    [" << agentTraj[j].x() << ", " << agentTraj[j].y()
                << "]";
       if (j < agentTraj.size() - 1) {
         dataFile << ",";
@@ -73,7 +73,7 @@ void Plotter::createVideo(const std::string& filename, int fps) {
     const auto& agentTraj = trajectories[i];
 
     for (size_t j = 0; j < agentTraj.size(); ++j) {
-      dataFile << "    [" << agentTraj[j].first << ", " << agentTraj[j].second
+      dataFile << "    [" << agentTraj[j].x() << ", " << agentTraj[j].y()
                << "]";
       if (j < agentTraj.size() - 1) {
         dataFile << ",";

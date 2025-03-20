@@ -57,29 +57,29 @@ TEST_F(SimulationTest, GridInitialization) {
 
   // Check if agents are roughly in grid positions
   // We can't check exact positions due to randomness in velocity/acceleration
-  EXPECT_NEAR(agents[0].getPosition().first, 2.5, 0.01);
-  EXPECT_NEAR(agents[0].getPosition().second, 2.5, 0.01);
+  EXPECT_NEAR(agents[0].getPosition().x(), 2.5, 0.01);
+  EXPECT_NEAR(agents[0].getPosition().y(), 2.5, 0.01);
 
-  EXPECT_NEAR(agents[1].getPosition().first, 7.5, 0.01);
-  EXPECT_NEAR(agents[1].getPosition().second, 2.5, 0.01);
+  EXPECT_NEAR(agents[1].getPosition().x(), 7.5, 0.01);
+  EXPECT_NEAR(agents[1].getPosition().y(), 2.5, 0.01);
 
-  EXPECT_NEAR(agents[2].getPosition().first, 2.5, 0.01);
-  EXPECT_NEAR(agents[2].getPosition().second, 7.5, 0.01);
+  EXPECT_NEAR(agents[2].getPosition().x(), 2.5, 0.01);
+  EXPECT_NEAR(agents[2].getPosition().y(), 7.5, 0.01);
 
-  EXPECT_NEAR(agents[3].getPosition().first, 7.5, 0.01);
-  EXPECT_NEAR(agents[3].getPosition().second, 7.5, 0.01);
+  EXPECT_NEAR(agents[3].getPosition().x(), 7.5, 0.01);
+  EXPECT_NEAR(agents[3].getPosition().y(), 7.5, 0.01);
 
   // Check that all velocities are within bounds
   for (const auto& agent : agents) {
-    EXPECT_LE(std::abs(agent.getVelocity().first), params.maxInitialVelocity);
-    EXPECT_LE(std::abs(agent.getVelocity().second), params.maxInitialVelocity);
+    EXPECT_LE(std::abs(agent.getVelocity().x()), params.maxInitialVelocity);
+    EXPECT_LE(std::abs(agent.getVelocity().y()), params.maxInitialVelocity);
   }
 
   // Check that all accelerations are within bounds
   for (const auto& agent : agents) {
-    EXPECT_LE(std::abs(agent.getAcceleration().first),
+    EXPECT_LE(std::abs(agent.getAcceleration().x()),
               params.maxInitialAcceleration);
-    EXPECT_LE(std::abs(agent.getAcceleration().second),
+    EXPECT_LE(std::abs(agent.getAcceleration().y()),
               params.maxInitialAcceleration);
   }
 }
@@ -93,19 +93,19 @@ TEST_F(SimulationTest, RandomInitialization) {
 
   // Check that agents are initialized within world bounds
   for (const auto& agent : simulation.getAgents()) {
-    EXPECT_GE(agent.getPosition().first, 0.0);
-    EXPECT_LE(agent.getPosition().first, params.worldSizeX);
+    EXPECT_GE(agent.getPosition().x(), 0.0);
+    EXPECT_LE(agent.getPosition().x(), params.worldSizeX);
 
-    EXPECT_GE(agent.getPosition().second, 0.0);
-    EXPECT_LE(agent.getPosition().second, params.worldSizeY);
+    EXPECT_GE(agent.getPosition().y(), 0.0);
+    EXPECT_LE(agent.getPosition().y(), params.worldSizeY);
 
     // Check velocity and acceleration bounds
-    EXPECT_LE(std::abs(agent.getVelocity().first), params.maxInitialVelocity);
-    EXPECT_LE(std::abs(agent.getVelocity().second), params.maxInitialVelocity);
+    EXPECT_LE(std::abs(agent.getVelocity().x()), params.maxInitialVelocity);
+    EXPECT_LE(std::abs(agent.getVelocity().y()), params.maxInitialVelocity);
 
-    EXPECT_LE(std::abs(agent.getAcceleration().first),
+    EXPECT_LE(std::abs(agent.getAcceleration().x()),
               params.maxInitialAcceleration);
-    EXPECT_LE(std::abs(agent.getAcceleration().second),
+    EXPECT_LE(std::abs(agent.getAcceleration().y()),
               params.maxInitialAcceleration);
   }
 }
@@ -119,9 +119,9 @@ TEST_F(SimulationTest, UpdateAgents) {
   simulation.initialize();
 
   // Set known position, velocity, and acceleration
-  simulation.getAgents()[0].setPosition({0.0, 0.0});
-  simulation.getAgents()[0].setVelocity({1.0, 2.0});
-  simulation.getAgents()[0].setAcceleration({0.5, -0.5});
+  simulation.getAgents()[0].setPosition(Eigen::Vector2d(0.0, 0.0));
+  simulation.getAgents()[0].setVelocity(Eigen::Vector2d(1.0, 2.0));
+  simulation.getAgents()[0].setAcceleration(Eigen::Vector2d(0.5, -0.5));
 
   // Get initial trajectory size for reference
   size_t initialTrajectorySize = simulation.getTrajectories()[0].size();
@@ -130,8 +130,8 @@ TEST_F(SimulationTest, UpdateAgents) {
   simulation.update();
 
   // Check the actual position after update
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().first, 1.5);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().second, 1.5);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().x(), 1.5);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().y(), 1.5);
 
   // Check that current time was updated
   EXPECT_DOUBLE_EQ(simulation.getCurrentTime(), params.timeStep);
@@ -141,8 +141,8 @@ TEST_F(SimulationTest, UpdateAgents) {
   EXPECT_EQ(trajectories[0].size(), initialTrajectorySize + 1);
 
   // Check the latest trajectory entry matches the current position
-  EXPECT_DOUBLE_EQ(trajectories[0].back().first, 1.5);
-  EXPECT_DOUBLE_EQ(trajectories[0].back().second, 1.5);
+  EXPECT_DOUBLE_EQ(trajectories[0].back().x(), 1.5);
+  EXPECT_DOUBLE_EQ(trajectories[0].back().y(), 1.5);
 }
 
 TEST_F(SimulationTest, MultipleUpdates) {
@@ -154,9 +154,9 @@ TEST_F(SimulationTest, MultipleUpdates) {
   simulation.initialize();
 
   // Set known position, velocity, and acceleration
-  simulation.getAgents()[0].setPosition({0.0, 0.0});
-  simulation.getAgents()[0].setVelocity({1.0, 1.0});
-  simulation.getAgents()[0].setAcceleration({0.0, 0.0});
+  simulation.getAgents()[0].setPosition(Eigen::Vector2d(0.0, 0.0));
+  simulation.getAgents()[0].setVelocity(Eigen::Vector2d(1.0, 1.0));
+  simulation.getAgents()[0].setAcceleration(Eigen::Vector2d(0.0, 0.0));
 
   // Get initial trajectory size for reference
   size_t initialTrajectorySize = simulation.getTrajectories()[0].size();
@@ -167,8 +167,8 @@ TEST_F(SimulationTest, MultipleUpdates) {
   }
 
   // Position after 4 updates of 0.5s with velocity (1,1) and no acceleration
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().first, 2.0);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().second, 2.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().x(), 2.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getPosition().y(), 2.0);
 
   // Check current time: 4 updates * 0.5s
   EXPECT_DOUBLE_EQ(simulation.getCurrentTime(), 2.0);
@@ -185,20 +185,21 @@ TEST_F(SimulationTest, SetAgentAccelerations) {
   simulation.initialize();
 
   // Set new accelerations
-  std::vector<std::pair<double, double>> accels = {
-      {1.0, 2.0}, {-0.5, 0.5}, {0.0, -1.0}};
+  std::vector<Eigen::Vector2d> accels = {Eigen::Vector2d(1.0, 2.0),
+                                         Eigen::Vector2d(-0.5, 0.5),
+                                         Eigen::Vector2d(0.0, -1.0)};
 
   simulation.setAgentAccelerations(accels);
 
   // Check that accelerations were set correctly
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().first, 1.0);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().second, 2.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().x(), 1.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().y(), 2.0);
 
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().first, -0.5);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().second, 0.5);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().x(), -0.5);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().y(), 0.5);
 
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().first, 0.0);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().second, -1.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().x(), 0.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().y(), -1.0);
 }
 
 TEST_F(SimulationTest, SetAgentAccelerationsWithMismatchedSizes) {
@@ -210,25 +211,26 @@ TEST_F(SimulationTest, SetAgentAccelerationsWithMismatchedSizes) {
 
   // Reset accelerations to known values
   for (auto& agent : simulation.getAgents()) {
-    agent.setAcceleration({0.0, 0.0});
+    agent.setAcceleration(Eigen::Vector2d(0.0, 0.0));
   }
 
   // Set new accelerations with smaller vector
-  std::vector<std::pair<double, double>> accels = {{1.0, 2.0}, {-0.5, 0.5}};
+  std::vector<Eigen::Vector2d> accels = {Eigen::Vector2d(1.0, 2.0),
+                                         Eigen::Vector2d(-0.5, 0.5)};
 
   // This should handle the size mismatch gracefully with a warning
   simulation.setAgentAccelerations(accels);
 
   // Check that accelerations were set correctly for the provided agents
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().first, 1.0);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().second, 2.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().x(), 1.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[0].getAcceleration().y(), 2.0);
 
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().first, -0.5);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().second, 0.5);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().x(), -0.5);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[1].getAcceleration().y(), 0.5);
 
   // Third agent should be unchanged
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().first, 0.0);
-  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().second, 0.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().x(), 0.0);
+  EXPECT_DOUBLE_EQ(simulation.getAgents()[2].getAcceleration().y(), 0.0);
 }
 
 TEST_F(SimulationTest, InvalidInitializationType) {
@@ -252,8 +254,8 @@ TEST_F(SimulationTest, InvalidInitializationType) {
   // For a 10-agent simulation in a 100x100 world, grid size would be 4x4
   // Check first agent is properly positioned (not at origin)
   auto& agents = simulation.getAgents();
-  EXPECT_GT(agents[0].getPosition().first, 0.0);
-  EXPECT_GT(agents[0].getPosition().second, 0.0);
+  EXPECT_GT(agents[0].getPosition().x(), 0.0);
+  EXPECT_GT(agents[0].getPosition().y(), 0.0);
 }
 
 int main(int argc, char** argv) {

@@ -31,12 +31,17 @@ if(CODE_COVERAGE AND NOT MSVC)
     endif()
 endif()
 
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
+
 # Create the main library target (excluding main.cpp)
 file(GLOB_RECURSE PROJECT_SOURCES "src/*.cpp")
 list(FILTER PROJECT_SOURCES EXCLUDE REGEX ".*main\\.cpp$")
 add_library(${PROJECT_NAME}_lib ${PROJECT_SOURCES}
         tests/Simulation_test.cpp)
-target_include_directories(${PROJECT_NAME}_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_include_directories(${PROJECT_NAME}_lib PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${EIGEN3_INCLUDE_DIR}
+)
 
 # Add src directory (for the executable)
 add_subdirectory(src)
